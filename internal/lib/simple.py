@@ -1,0 +1,21 @@
+def scrape():
+    return '''Medication.code.coding.[0].system="http://hl7.org/fhir/sid/ndc"
+Medication.code.coding.[0].code="0409-6531-02"
+Medication.code.coding.[0].display="Vancomycin Hydrochloride (VANCOMYCIN HYDROCHLORIDE)"
+Medication.status="active"
+Medication.manufacturer.reference="#org4"
+Medication.form.coding.[0].system="http://snomed.info/sct"
+Medication.form.coding.[0].code="385219001"
+Medication.form.coding.[0].display="Injection Solution (qualifier value)"
+Medication.ingredient.[0].itemCodeableConcept.coding.[0].system="http://www.nlm.nih.gov/research/umls/rxnorm"
+Medication.ingredient.[0].itemCodeableConcept.coding.[0].code="66955"
+Medication.ingredient.[0].itemCodeableConcept.coding.[0].display="Vancomycin Hydrochloride"
+Medication.ingredient.[0].isActive=true
+Medication.ingredient.[0].strength.numerator.value=500
+Medication.ingredient.[0].strength.numerator.system="http://unitsofmeasure.org"
+Medication.ingredient.[0].strength.numerator.code="mg"
+Medication.ingredient.[0].strength.denominator.value=10
+Medication.ingredient.[0].strength.denominator.system="http://unitsofmeasure.org"
+Medication.ingredient.[0].strength.denominator.code="mL"
+Medication.batch.lotNumber="9494788"
+Medication.batch.expirationDate="2017-05-22'''
