@@ -1,25 +1,27 @@
 package domain
 
-type Expression string
-
-type Token struct {
-	TokenType  TokenType
-	TokenValue any
+type Lexemes struct {
+	ResourceToken string
+	FieldToken    []FieldToken
+	ValueToken    any
 }
 
-type TokenType int
+type FieldToken struct {
+	FieldTokenType FieldTokenType
+	FieldTokenName string
+}
+
+type FieldTokenType int
 
 const (
-	Resource TokenType = iota
-	Field
-	Data
+	SimpleField FieldTokenType = iota
 	ArrayObject
 	ArrayValue
 )
 
-func New(t TokenType, v any) Token {
-	return Token{
-		TokenType:  t,
-		TokenValue: v,
+func NewToken(t FieldTokenType, v string) FieldToken {
+	return FieldToken{
+		FieldTokenType: t,
+		FieldTokenName: v,
 	}
 }

@@ -6,29 +6,30 @@ import (
 	"strings"
 )
 
-func Do(key string, value any) []domain.Token {
-	var tokens []domain.Token
+func Tokenize(key string, value any) domain.Lexemes {
+	var tokens []domain.FieldToken
 	fields := strings.Split(key, ".")
-	tokens = append(tokens, domain.New(domain.Resource, fields[0]))
-
+	exp := domain.Lexemes{
+		ResourceToken: fields[0],
+		ValueToken:    value,
+	}
 	for i := 1; i < len(fields); i++ {
-		token := domain.New(tokenType(fields[i]), normalize(fields[i]))
+		token := domain.NewToken(tokenType(fields[i]), normalize(fields[i]))
 		tokens = append(tokens, token)
 	}
+	exp.FieldToken = tokens
 
-	tokens = append(tokens, domain.New(domain.Data, value))
-
-	return tokens
+	return exp
 }
 
-func tokenType(field string) domain.TokenType {
+func tokenType(field string) domain.FieldTokenType {
 	if strings.Contains(field, "[") {
 		return domain.ArrayObject
 	}
 	if strings.Contains(field, "{") {
 		return domain.ArrayValue
 	}
-	return domain.Field
+	return domain.SimpleField
 }
 
 func normalize(field string) string {
