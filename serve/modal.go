@@ -1,7 +1,7 @@
-package comfhirer_server
+package serve
 
 type Bundle struct {
-	ResourceType string  `default:"bundle", json:"resourceType"`
+	ResourceType string  `default:"bundle"`
 	Entry        []Entry `json:"entry"`
 }
 type Entry struct {
