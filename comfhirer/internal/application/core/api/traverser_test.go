@@ -122,4 +122,64 @@ func TestTraverserBehaviour(t *testing.T) {
 		assert.Equal(t, want, got)
 
 	})
+
+	t.Run("traverse ast with comfhirer value position field", func(t *testing.T) {
+		name := domain.FhirField{
+			Name:            "name",
+			FieldParsedType: domain.SingleField,
+			FhirField: &domain.FhirField{
+				Name:            "0",
+				FieldParsedType: domain.MultipleNestedField,
+				FhirField: &domain.FhirField{
+					Name:            "given",
+					FieldParsedType: domain.SingleField,
+					FhirField: &domain.FhirField{
+						Name:            "0",
+						FieldParsedType: domain.MultipleValueField,
+					},
+				},
+			},
+		}
+
+		middleName := domain.FhirField{
+			Name:            "name",
+			FieldParsedType: domain.SingleField,
+			FhirField: &domain.FhirField{
+				Name:            "0",
+				FieldParsedType: domain.MultipleNestedField,
+				FhirField: &domain.FhirField{
+					Name:            "given",
+					FieldParsedType: domain.SingleField,
+					FhirField: &domain.FhirField{
+						Name:            "1",
+						FieldParsedType: domain.MultipleValueField,
+					},
+				},
+			},
+		}
+		ast := []domain.ASTNode{
+			domain.NewASTNode("Patient", "Jane", name),
+			domain.NewASTNode("Patient", "Mary", middleName)}
+
+		got := api.Travers(ast)
+
+		want := fhir_r4.Bundle{
+			ResourceType: "Bundle",
+			Entry: []fhir_r4.BundleEntry{
+				{
+					Resource: fhir_r4.Patient{
+						ResourceType: "Patient",
+						Name: []fhir_r4.HumanName{
+							{
+								Given: []string{"Jane", "Mary"},
+							},
+						},
+					},
+				},
+			},
+		}
+
+		assert.Equal(t, want, got)
+
+	})
 }

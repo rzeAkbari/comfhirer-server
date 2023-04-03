@@ -72,4 +72,41 @@ func TestParserBehaviour(t *testing.T) {
 
 		assert.Equal(t, want, got)
 	})
+
+	t.Run("parse token with comfhirer value position field", func(t *testing.T) {
+		tokens := []domain.FieldToken{
+			domain.NewToken(domain.SimpleField, "name"),
+			domain.NewToken(domain.ArrayObject, "0"),
+			domain.NewToken(domain.SimpleField, "given"),
+			domain.NewToken(domain.ArrayValue, "0"),
+		}
+		lexemes := domain.Lexemes{
+			ResourceToken: "Patient",
+			FieldToken:    tokens,
+			ValueToken:    "Jane",
+		}
+
+		got := api.Parse(lexemes)
+
+		field := domain.FhirField{
+			Name:            "name",
+			FieldParsedType: domain.SingleField,
+			FhirField: &domain.FhirField{
+				Name:            "0",
+				FieldParsedType: domain.MultipleNestedField,
+				FhirField: &domain.FhirField{
+					Name:            "given",
+					FieldParsedType: domain.SingleField,
+					FhirField: &domain.FhirField{
+						Name:            "0",
+						FieldParsedType: domain.MultipleValueField,
+					},
+				},
+			},
+		}
+		want := domain.NewASTNode("Patient", "Jane", field)
+
+		assert.Equal(t, want, got)
+
+	})
 }
