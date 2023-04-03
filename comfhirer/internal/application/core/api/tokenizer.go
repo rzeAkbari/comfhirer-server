@@ -6,7 +6,10 @@ import (
 	"strings"
 )
 
-func Tokenize(key string, value any) domain.Lexemes {
+type Tokenizer struct {
+}
+
+func (t Tokenizer) Tokenize(key string, value any) domain.Lexemes {
 	var tokens []domain.FieldToken
 	fields := strings.Split(key, ".")
 	exp := domain.Lexemes{

@@ -4,7 +4,10 @@ import (
 	"github.com/rzeAkbari/comfhirer-server/comfhirer/internal/application/core/domain"
 )
 
-func Parse(lexemes domain.Lexemes) domain.ASTNode {
+type Parser struct {
+}
+
+func (p Parser) Parse(lexemes domain.Lexemes) domain.ASTNode {
 
 	if (len(lexemes.FieldToken)) == 0 {
 		return domain.NewASTNode(lexemes.ResourceToken, lexemes.ValueToken, domain.FhirField{})

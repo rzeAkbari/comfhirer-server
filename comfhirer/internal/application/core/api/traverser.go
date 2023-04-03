@@ -12,7 +12,10 @@ var typeRegistry = map[string]reflect.Type{
 	"Patient": reflect.TypeOf(fhir_r4.Patient{}),
 }
 
-func Travers(ast []domain.ASTNode) fhir_r4.Bundle {
+type Traverser struct {
+}
+
+func (t Traverser) Travers(ast []domain.ASTNode) fhir_r4.Bundle {
 	r := fhir_r4.Bundle{
 		ResourceType: "Bundle",
 	}
