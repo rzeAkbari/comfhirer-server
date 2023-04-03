@@ -9,6 +9,8 @@ import (
 )
 
 func TestTraverserBehaviour(t *testing.T) {
+	traveser := api.Traverser{}
+
 	t.Run("traverse ast with a single field", func(t *testing.T) {
 		field := domain.FhirField{
 			Name:            "birthDate",
@@ -16,7 +18,7 @@ func TestTraverserBehaviour(t *testing.T) {
 		}
 		ast := []domain.ASTNode{domain.NewASTNode("Patient", "20-12-1988", field)}
 
-		got := api.Travers(ast)
+		got := traveser.Travers(ast)
 
 		want := fhir_r4.Bundle{
 			ResourceType: "Bundle",
@@ -50,7 +52,7 @@ func TestTraverserBehaviour(t *testing.T) {
 		}
 		ast := []domain.ASTNode{domain.NewASTNode("Patient", "M", field)}
 
-		got := api.Travers(ast)
+		got := traveser.Travers(ast)
 
 		want := fhir_r4.Bundle{
 			ResourceType: "Bundle",
@@ -99,7 +101,7 @@ func TestTraverserBehaviour(t *testing.T) {
 			domain.NewASTNode("Patient", "20-12-1988", birthDayField),
 			domain.NewASTNode("Patient", "M", maritalStatusField)}
 
-		got := api.Travers(ast)
+		got := traveser.Travers(ast)
 
 		want := fhir_r4.Bundle{
 			ResourceType: "Bundle",
@@ -161,7 +163,7 @@ func TestTraverserBehaviour(t *testing.T) {
 			domain.NewASTNode("Patient", "Jane", name),
 			domain.NewASTNode("Patient", "Mary", middleName)}
 
-		got := api.Travers(ast)
+		got := traveser.Travers(ast)
 
 		want := fhir_r4.Bundle{
 			ResourceType: "Bundle",

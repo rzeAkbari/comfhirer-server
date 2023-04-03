@@ -8,14 +8,14 @@ import (
 )
 
 func TestParserBehaviour(t *testing.T) {
-
+	parser := api.Parser{}
 	t.Run("parse token with resource", func(t *testing.T) {
 		lexemes := domain.Lexemes{
 			ResourceToken: "Patient",
 			ValueToken:    "",
 		}
 
-		got := api.Parse(lexemes)
+		got := parser.Parse(lexemes)
 		want := domain.NewASTNode("Patient", "", domain.FhirField{})
 
 		assert.Equal(t, want, got)
@@ -31,7 +31,7 @@ func TestParserBehaviour(t *testing.T) {
 			ValueToken:    "20-12-1988",
 		}
 
-		got := api.Parse(lexemes)
+		got := parser.Parse(lexemes)
 
 		field := domain.FhirField{
 			Name:            "birthDate",
@@ -54,7 +54,7 @@ func TestParserBehaviour(t *testing.T) {
 			ValueToken:    1,
 		}
 
-		got := api.Parse(lexemes)
+		got := parser.Parse(lexemes)
 
 		field := domain.FhirField{
 			Name:            "telecom",
@@ -86,7 +86,7 @@ func TestParserBehaviour(t *testing.T) {
 			ValueToken:    "Jane",
 		}
 
-		got := api.Parse(lexemes)
+		got := parser.Parse(lexemes)
 
 		field := domain.FhirField{
 			Name:            "name",

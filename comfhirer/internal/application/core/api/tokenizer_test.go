@@ -9,8 +9,10 @@ import (
 
 func TestTokenizeBehaviour(t *testing.T) {
 
+	tokenizer := api.Tokenizer{}
+
 	t.Run("tokenize simple resource", func(t *testing.T) {
-		got := api.Tokenize("Patient", "")
+		got := tokenizer.Tokenize("Patient", "")
 		want := domain.Lexemes{
 			ResourceToken: "Patient",
 			ValueToken:    "",
@@ -20,7 +22,7 @@ func TestTokenizeBehaviour(t *testing.T) {
 
 	t.Run("tokenize string data", func(t *testing.T) {
 
-		got := api.Tokenize("Patient.birthDate", "20-12-1988")
+		got := tokenizer.Tokenize("Patient.birthDate", "20-12-1988")
 		tokens := []domain.FieldToken{
 			domain.NewToken(domain.SimpleField, "birthDate"),
 		}
@@ -34,7 +36,7 @@ func TestTokenizeBehaviour(t *testing.T) {
 	})
 
 	t.Run("tokenize boolean data", func(t *testing.T) {
-		got := api.Tokenize("Person.active", true)
+		got := tokenizer.Tokenize("Person.active", true)
 		tokens := []domain.FieldToken{
 			domain.NewToken(domain.SimpleField, "active"),
 		}
@@ -47,7 +49,7 @@ func TestTokenizeBehaviour(t *testing.T) {
 	})
 
 	t.Run("tokenize comfhirer object position field", func(t *testing.T) {
-		got := api.Tokenize("Patient.telecom.[0].rank", 1)
+		got := tokenizer.Tokenize("Patient.telecom.[0].rank", 1)
 		tokens := []domain.FieldToken{
 			domain.NewToken(domain.SimpleField, "telecom"),
 			domain.NewToken(domain.ArrayObject, "0"),
@@ -64,7 +66,7 @@ func TestTokenizeBehaviour(t *testing.T) {
 	})
 
 	t.Run("tokenize single comfhirer value position field", func(t *testing.T) {
-		got := api.Tokenize("Patient.name.[0].given.{1}", "Jane")
+		got := tokenizer.Tokenize("Patient.name.[0].given.{1}", "Jane")
 		tokens := []domain.FieldToken{
 			domain.NewToken(domain.SimpleField, "name"),
 			domain.NewToken(domain.ArrayObject, "0"),
