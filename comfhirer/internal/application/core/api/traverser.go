@@ -2,21 +2,20 @@ package api
 
 import (
 	"github.com/rzeAkbari/comfhirer-server/comfhirer/internal/application/core/domain"
-	fhir_r4 "github.com/rzeAkbari/comfhirer-server/comfhirer/internal/application/fhir/r4"
 	"reflect"
 	"strconv"
 	"unicode"
 )
 
 var typeRegistry = map[string]reflect.Type{
-	"Patient": reflect.TypeOf(fhir_r4.Patient{}),
+	"Patient": reflect.TypeOf(domain.Patient{}),
 }
 
 type Traverser struct {
 }
 
-func (t Traverser) Travers(ast []domain.ASTNode) fhir_r4.Bundle {
-	r := fhir_r4.Bundle{
+func (t Traverser) Travers(ast []domain.ASTNode) domain.Bundle {
+	r := domain.Bundle{
 		ResourceType: "Bundle",
 	}
 
@@ -29,7 +28,7 @@ func (t Traverser) Travers(ast []domain.ASTNode) fhir_r4.Bundle {
 		setField(fhirResource, &node.FhirField, node.NodeValue)
 	}
 
-	r.Entry = append(r.Entry, fhir_r4.BundleEntry{Resource: fhirResource.Interface()})
+	r.Entry = append(r.Entry, domain.BundleEntry{Resource: fhirResource.Interface()})
 
 	return r
 }
@@ -53,11 +52,21 @@ func setField(fhirResource reflect.Value, field *domain.FhirField, value any) re
 	fieldName := camelToPascalCase(field.Name)
 
 	if field.FieldParsedType == domain.SingleField {
-		fhirField := fhirResource.FieldByName(fieldName)
-		if fhirResource.FieldByName(fieldName).Kind() != reflect.Struct &&
-			fhirResource.FieldByName(fieldName).Interface() == nil {
+		var fhirField reflect.Value
+
+		if fieldPointer(fhirResource) {
+			fhirField = reflect.Indirect(fhirResource).FieldByName(fieldName)
+		}
+		if emptySlice(fhirResource, fieldName) {
 			fhirField = reflect.New(fhirResource.FieldByName(fieldName).Type()).Elem() //catch exception when field not exists
 		}
+		if !fhirField.IsValid() {
+			fhirField = fhirResource.FieldByName(fieldName)
+			if nilFieldPointer(fhirField) {
+				fhirField = reflect.New(fhirField.Type().Elem())
+			}
+		}
+
 		setField(fhirField, nestedField, value)
 		setFieldValue(fhirResource, field.Name, fhirField.Interface())
 	}
@@ -79,8 +88,13 @@ func setField(fhirResource reflect.Value, field *domain.FhirField, value any) re
 }
 
 func setFieldValue(fhirResource reflect.Value, fieldName string, value any) reflect.Value {
+	var field reflect.Value
 	fhirResourceField := camelToPascalCase(fieldName)
-	field := fhirResource.FieldByName(fhirResourceField)
+	if fhirResource.Kind() == reflect.Pointer {
+		field = reflect.Indirect(fhirResource).FieldByName(fhirResourceField)
+	} else {
+		field = fhirResource.FieldByName(fhirResourceField)
+	}
 	if field.IsValid() && field.CanSet() {
 		field.Set(reflect.ValueOf(value))
 	}
@@ -96,4 +110,18 @@ func camelToPascalCase(fieldName string) string {
 
 func hasFhirField(fhirResourceSlice reflect.Value, fhirFieldIndex int) bool {
 	return fhirResourceSlice.Len()-1 == fhirFieldIndex
+}
+
+func nilFieldPointer(fhirResource reflect.Value) bool {
+	return fhirResource.Kind() == reflect.Pointer && fhirResource.IsNil()
+}
+
+func fieldPointer(fhirResource reflect.Value) bool {
+	return fhirResource.Kind() == reflect.Pointer && !fhirResource.IsNil()
+}
+
+func emptySlice(fhirResource reflect.Value, fieldName string) bool {
+	return fhirResource.Kind() != reflect.Pointer &&
+		fhirResource.FieldByName(fieldName).Kind() != reflect.Struct &&
+		fhirResource.FieldByName(fieldName).Interface() == nil
 }

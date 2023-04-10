@@ -3,7 +3,6 @@ package api_test
 import (
 	"github.com/rzeAkbari/comfhirer-server/comfhirer/internal/application/core/api"
 	"github.com/rzeAkbari/comfhirer-server/comfhirer/internal/application/core/domain"
-	fhir_r4 "github.com/rzeAkbari/comfhirer-server/comfhirer/internal/application/fhir/r4"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -20,11 +19,14 @@ func TestTraverserBehaviour(t *testing.T) {
 
 		got := traveser.Travers(ast)
 
-		want := fhir_r4.Bundle{
+		want := domain.Bundle{
 			ResourceType: "Bundle",
-			Entry: []fhir_r4.BundleEntry{
+			Entry: []domain.BundleEntry{
 				{
-					Resource: fhir_r4.Patient{ResourceType: "Patient", BirthDate: "20-12-1988"},
+					Resource: domain.Patient{
+						ResourceType: "Patient",
+						BirthDate:    "20-12-1988",
+					},
 				},
 			},
 		}
@@ -54,19 +56,20 @@ func TestTraverserBehaviour(t *testing.T) {
 
 		got := traveser.Travers(ast)
 
-		want := fhir_r4.Bundle{
+		want := domain.Bundle{
 			ResourceType: "Bundle",
-			Entry: []fhir_r4.BundleEntry{
+			Entry: []domain.BundleEntry{
 				{
-					Resource: fhir_r4.Patient{
+					Resource: domain.Patient{
 						ResourceType: "Patient",
-						MaritalStatus: fhir_r4.CodeableConcept{
-							Coding: []fhir_r4.Coding{
+						MaritalStatus: &domain.CodeableConcept{
+							Coding: []domain.Coding{
 								{
 									Code: "M",
 								},
 							},
-						}},
+						},
+					},
 				},
 			},
 		}
@@ -103,15 +106,15 @@ func TestTraverserBehaviour(t *testing.T) {
 
 		got := traveser.Travers(ast)
 
-		want := fhir_r4.Bundle{
+		want := domain.Bundle{
 			ResourceType: "Bundle",
-			Entry: []fhir_r4.BundleEntry{
+			Entry: []domain.BundleEntry{
 				{
-					Resource: fhir_r4.Patient{
+					Resource: domain.Patient{
 						ResourceType: "Patient",
 						BirthDate:    "20-12-1988",
-						MaritalStatus: fhir_r4.CodeableConcept{
-							Coding: []fhir_r4.Coding{
+						MaritalStatus: &domain.CodeableConcept{
+							Coding: []domain.Coding{
 								{
 									Code: "M",
 								},
@@ -165,13 +168,13 @@ func TestTraverserBehaviour(t *testing.T) {
 
 		got := traveser.Travers(ast)
 
-		want := fhir_r4.Bundle{
+		want := domain.Bundle{
 			ResourceType: "Bundle",
-			Entry: []fhir_r4.BundleEntry{
+			Entry: []domain.BundleEntry{
 				{
-					Resource: fhir_r4.Patient{
+					Resource: domain.Patient{
 						ResourceType: "Patient",
-						Name: []fhir_r4.HumanName{
+						Name: []domain.HumanName{
 							{
 								Given: []string{"Jane", "Mary"},
 							},
