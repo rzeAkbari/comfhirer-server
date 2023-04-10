@@ -52,28 +52,28 @@ type BundleEntry struct {
 	 * fullUrl might not be [unique in the context of a resource](bundle.html#bundle-unique). Note that since [FHIR resources do not need to be served through the FHIR API](references.html), the fullURL might be a URN or an absolute URL that does not end with the logical id of the resource (Resource.id). However, but if the fullUrl does look like a RESTful server URL (e.g. meets the [regex](references.html#regex), then the 'id' portion of the fullUrl SHALL end with the Resource.id.
 	 * Note that the fullUrl is not the same as the canonical URL - it's an absolute url for an endpoint serving the resource (these will happen to have the same value on the canonical server for the resource with the canonical URL).
 	 */
-	FullUrl  string
-	_FullUrl *Element
+	FullUrl  string   `json:"fullUrl,omitempty"`
+	_FullUrl *Element `json:"_fullUrl,omitempty"`
 	/**
 	 * A series of links that provide context to this entry.
 	 */
-	Link []BundleLink
+	Link []BundleLink `json:"link,omitempty"`
 	/**
 	 * Additional information about how this entry should be processed as part of a transaction or batch.  For history, it shows how the entry was processed to create the version contained in the entry.
 	 */
-	Request *BundleEntryRequest
+	Request *BundleEntryRequest `json:"request,omitempty"`
 	/**
 	 * The Resource for the entry. The purpose/meaning of the resource is determined by the Bundle.type.
 	 */
-	Resource EntryFhirResource
+	Resource EntryFhirResource `json:"resource"`
 	/**
 	 * Indicates the results of processing the corresponding 'request' entry in the batch or transaction being responded to or what the results of an operation where when returning history.
 	 */
-	response *BundleEntryResponse
+	response *BundleEntryResponse `json:"response,omitempty"`
 	/**
 	 * Information about the search process that lead to the creation of this entry.
 	 */
-	Search *BundleEntrySearch
+	Search *BundleEntrySearch `json:"search,omitempty"`
 }
 
 type BundleLink struct {
@@ -891,47 +891,47 @@ type Medication struct {
 	/**
 	 * Specific amount of the drug in the packaged product.  For example, when specifying a product that has the same strength (For example, Insulin glargine 100 unit per mL solution for injection), this attribute provides additional clarification of the package amount (For example, 3 mL, 10mL, etc.).
 	 */
-	Amount *Ratio
+	Amount *Ratio `json:"amount,omitempty"`
 	/**
 	 * Information that only applies to packages (not products).
 	 */
-	Batch *MedicationBatch
+	Batch *MedicationBatch `json:"batch,omitempty"`
 	/**
 	 * Depending on the context of use, the code that was actually selected by the user (prescriber, dispenser, etc.) will have the coding.userSelected set to true.  As described in the coding datatype: "A coding may be marked as a "userSelected" if a user selected the particular coded value in a user interface (e.g. the user selects an item in a pick-list). If a user selected coding exists, it is the preferred choice for performing translations etc. Other codes can only be literal translations to alternative code systems, or codes at a lower level of granularity (e.g. a generic code for a vendor-specific primary one).
 	 */
-	Code *CodeableConcept
+	Code *CodeableConcept `json:"code,omitempty"`
 	/**
 	 * When Medication is referenced from MedicationRequest, this is the ordered form.  When Medication is referenced within MedicationDispense, this is the dispensed form.  When Medication is referenced within MedicationAdministration, this is administered form.
 	 */
-	Form *CodeableConcept
+	Form *CodeableConcept `json:"form,omitempty"`
 	/**
 	 * The serial number could be included as an identifier.
 	 */
-	Identifier []Identifier
+	Identifier []Identifier `json:"identifier,omitempty"`
 	/**
 	 * The ingredients need not be a complete list.  If an ingredient is not specified, this does not indicate whether an ingredient is present or absent.  If an ingredient is specified it does not mean that all ingredients are specified.  It is possible to specify both inactive and active ingredients.
 	 */
-	Ingredient []MedicationIngredient
+	Ingredient []MedicationIngredient `json:"ingredient,omitempty"`
 	/**
 	 * Describes the details of the manufacturer of the medication product.  This is not intended to represent the distributor of a medication product.
 	 */
-	Manufacturer *Reference
+	Manufacturer *Reference `json:"manufacturer,omitempty"`
 	/**
 	 * This status is intended to identify if the medication in a local system is in active use within a drug database or inventory.  For example, a pharmacy system may create a new drug file record for a compounded product "ABC Hospital Special Cream" with an active status.  At some point in the future, it may be determined that the drug record was created with an error and the status is changed to "entered in error".   This status is not intended to specify if a medication is part of a particular formulary.  It is possible that the drug record may be referenced by multiple formularies or catalogues and each of those entries would have a separate status.
 	 */
-	Status  MedicationStatus
-	_Status *Element
+	Status  MedicationStatus `json:"status,omitempty"`
+	_Status *Element         `json:"_status,omitempty"`
 }
 
 type Ratio struct {
 	/**
 	 * The value of the denominator.
 	 */
-	Denominator *Quantity
+	Denominator *Quantity `json:"denominator,omitempty"`
 	/**
 	 * The value of the numerator.
 	 */
-	Numerator *Quantity
+	Numerator *Quantity `json:"numerator,omitempty"`
 }
 
 type QuantityComparator string
@@ -947,59 +947,58 @@ type Quantity struct {
 	/**
 	 * The preferred system is UCUM, but SNOMED CT can also be used (for customary units) or ISO 4217 for currency.  The context of use may additionally require a code from a particular system.
 	 */
-	Code  string
-	_Code *Element
+	Code  string   `json:"code,omitempty"`
+	_Code *Element `json:"_code,omitempty"`
 	/**
 	 * How the value should be understood and represented - whether the actual value is greater or less than the stated value due to measurement issues e.g. if the comparator is "<" , then the real value is < stated value.
 	 */
-	Comparator  QuantityComparator
-	_Comparator *Element
+	Comparator  QuantityComparator `json:"comparator,omitempty"`
+	_Comparator *Element           `json:"_comparator,omitempty"`
 	/**
 	 * The identification of the system that provides the coded form of the unit.
 	 */
-	system  string
-	_system *Element
+	system  string   `json:"system,omitempty"`
+	_system *Element `json:"_system,omitempty"`
 	/**
 	 * A human-readable form of the unit.
 	 */
-	unit  string
-	_unit *Element
+	unit  string   `json:"unit,omitempty"`
+	_unit *Element `json:"_unit,omitempty"`
 	/**
 	 * The implicit precision in the value should always be honored. Monetary values have their own rules for handling precision (refer to standard accounting text books).
 	 */
-	value int
+	value int `json:"value,omitempty"`
 }
 
 type MedicationBatch struct {
 	/**
 	 * When this specific batch of product will expire.
 	 */
-	ExpirationDate  string
-	_ExpirationDate *Element
+	ExpirationDate  string   `json:"expirationDate,omitempty"`
+	_ExpirationDate *Element `json:"_expirationDate,omitempty"`
 	/**
 	 * The assigned lot number of a batch of the specified product.
 	 */
-	LotNumber  string
-	_LotNumber *Element
+	LotNumber  string   `json:"lotNumber,omitempty"`
+	_LotNumber *Element `json:"_lotNumber,omitempty"`
 }
 
 type MedicationIngredient struct {
 	/**
 	 * Indication of whether this ingredient affects the therapeutic action of the drug.
 	 */
-	*BackboneElement
-	IsActive  bool
-	_IsActive *Element
+	IsActive  bool     `json:"isActive,omitempty"`
+	_IsActive *Element `json:"_isActive,omitempty"`
 	/**
 	 * The actual ingredient - either a substance (simple ingredient) or another medication of a medication.
 	 */
-	ItemCodeableConcept *CodeableConcept
+	ItemCodeableConcept *CodeableConcept `json:"itemCodeableConcept,omitempty"`
 	/**
 	 * The actual ingredient - either a substance (simple ingredient) or another medication of a medication.
 	 */
-	ItemReference *Reference
+	ItemReference *Reference `json:"itemReference,omitempty"`
 	/**
 	 * Specifies how many (or how much) of the items there are in this Medication.  For example, 250 mg per tablet.  This is expressed as a ratio where the numerator is 250mg and the denominator is 1 tablet.
 	 */
-	Strength *Ratio
+	Strength *Ratio `json:"strength,omitempty"`
 }
