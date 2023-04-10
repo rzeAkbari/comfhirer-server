@@ -876,3 +876,130 @@ type PatientLink struct {
 	Type  PatientLinkType
 	_Type *Element
 }
+type MedicationStatus string
+
+const (
+	Active         MedicationStatus = "active"
+	Inactive       MedicationStatus = "inactive"
+	EnteredInError MedicationStatus = "entered-in-error"
+)
+
+type Medication struct {
+
+	/** Resource Type Name (for serialization) */
+	ResourceType string
+	/**
+	 * Specific amount of the drug in the packaged product.  For example, when specifying a product that has the same strength (For example, Insulin glargine 100 unit per mL solution for injection), this attribute provides additional clarification of the package amount (For example, 3 mL, 10mL, etc.).
+	 */
+	Amount *Ratio
+	/**
+	 * Information that only applies to packages (not products).
+	 */
+	Batch *MedicationBatch
+	/**
+	 * Depending on the context of use, the code that was actually selected by the user (prescriber, dispenser, etc.) will have the coding.userSelected set to true.  As described in the coding datatype: "A coding may be marked as a "userSelected" if a user selected the particular coded value in a user interface (e.g. the user selects an item in a pick-list). If a user selected coding exists, it is the preferred choice for performing translations etc. Other codes can only be literal translations to alternative code systems, or codes at a lower level of granularity (e.g. a generic code for a vendor-specific primary one).
+	 */
+	Code *CodeableConcept
+	/**
+	 * When Medication is referenced from MedicationRequest, this is the ordered form.  When Medication is referenced within MedicationDispense, this is the dispensed form.  When Medication is referenced within MedicationAdministration, this is administered form.
+	 */
+	Form *CodeableConcept
+	/**
+	 * The serial number could be included as an identifier.
+	 */
+	Identifier []Identifier
+	/**
+	 * The ingredients need not be a complete list.  If an ingredient is not specified, this does not indicate whether an ingredient is present or absent.  If an ingredient is specified it does not mean that all ingredients are specified.  It is possible to specify both inactive and active ingredients.
+	 */
+	Ingredient []MedicationIngredient
+	/**
+	 * Describes the details of the manufacturer of the medication product.  This is not intended to represent the distributor of a medication product.
+	 */
+	Manufacturer *Reference
+	/**
+	 * This status is intended to identify if the medication in a local system is in active use within a drug database or inventory.  For example, a pharmacy system may create a new drug file record for a compounded product "ABC Hospital Special Cream" with an active status.  At some point in the future, it may be determined that the drug record was created with an error and the status is changed to "entered in error".   This status is not intended to specify if a medication is part of a particular formulary.  It is possible that the drug record may be referenced by multiple formularies or catalogues and each of those entries would have a separate status.
+	 */
+	Status  MedicationStatus
+	_Status *Element
+}
+
+type Ratio struct {
+	/**
+	 * The value of the denominator.
+	 */
+	Denominator *Quantity
+	/**
+	 * The value of the numerator.
+	 */
+	Numerator *Quantity
+}
+
+type QuantityComparator string
+
+const (
+	Less        QuantityComparator = "<"
+	LessEqual   QuantityComparator = "<="
+	Grater      QuantityComparator = ">"
+	GraterEqual QuantityComparator = ">="
+)
+
+type Quantity struct {
+	/**
+	 * The preferred system is UCUM, but SNOMED CT can also be used (for customary units) or ISO 4217 for currency.  The context of use may additionally require a code from a particular system.
+	 */
+	Code  string
+	_Code *Element
+	/**
+	 * How the value should be understood and represented - whether the actual value is greater or less than the stated value due to measurement issues e.g. if the comparator is "<" , then the real value is < stated value.
+	 */
+	Comparator  QuantityComparator
+	_Comparator *Element
+	/**
+	 * The identification of the system that provides the coded form of the unit.
+	 */
+	system  string
+	_system *Element
+	/**
+	 * A human-readable form of the unit.
+	 */
+	unit  string
+	_unit *Element
+	/**
+	 * The implicit precision in the value should always be honored. Monetary values have their own rules for handling precision (refer to standard accounting text books).
+	 */
+	value int
+}
+
+type MedicationBatch struct {
+	/**
+	 * When this specific batch of product will expire.
+	 */
+	ExpirationDate  string
+	_ExpirationDate *Element
+	/**
+	 * The assigned lot number of a batch of the specified product.
+	 */
+	LotNumber  string
+	_LotNumber *Element
+}
+
+type MedicationIngredient struct {
+	/**
+	 * Indication of whether this ingredient affects the therapeutic action of the drug.
+	 */
+	*BackboneElement
+	IsActive  bool
+	_IsActive *Element
+	/**
+	 * The actual ingredient - either a substance (simple ingredient) or another medication of a medication.
+	 */
+	ItemCodeableConcept *CodeableConcept
+	/**
+	 * The actual ingredient - either a substance (simple ingredient) or another medication of a medication.
+	 */
+	ItemReference *Reference
+	/**
+	 * Specifies how many (or how much) of the items there are in this Medication.  For example, 250 mg per tablet.  This is expressed as a ratio where the numerator is 250mg and the denominator is 1 tablet.
+	 */
+	Strength *Ratio
+}

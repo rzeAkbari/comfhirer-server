@@ -8,35 +8,44 @@ import (
 )
 
 var typeRegistry = map[string]reflect.Type{
-	"Patient": reflect.TypeOf(domain.Patient{}),
+	"Patient":    reflect.TypeOf(domain.Patient{}),
+	"Medication": reflect.TypeOf(domain.Medication{}),
 }
 
 type Traverser struct {
 }
 
 func (t Traverser) Travers(ast []domain.ASTNode) domain.Bundle {
+	var instances = map[string]reflect.Value{}
+
 	r := domain.Bundle{
 		ResourceType: "Bundle",
 	}
 
-	fhirResourceName := ast[0].NodeName
-	fhirResource := fhirResourceInstance(fhirResourceName)
-
-	setFieldValue(fhirResource, "resourceType", ast[0].NodeName)
-
 	for _, node := range ast {
+		fhirResource := fhirResourceInstance(node.NodeName, instances)
 		setField(fhirResource, &node.FhirField, node.NodeValue)
 	}
 
-	r.Entry = append(r.Entry, domain.BundleEntry{Resource: fhirResource.Interface()})
+	for _, fhirResource := range instances {
+		r.Entry = append(r.Entry, domain.BundleEntry{Resource: fhirResource.Interface()})
+	}
 
 	return r
 }
 
-func fhirResourceInstance(fhirResourceName string) reflect.Value {
-	fhirResourceType := typeRegistry[fhirResourceName]
+func fhirResourceInstance(fhirResourceName string, instances map[string]reflect.Value) reflect.Value {
+	if instances[fhirResourceName].IsValid() {
+		return instances[fhirResourceName]
+	}
 
-	return reflect.New(fhirResourceType).Elem()
+	fhirResourceType := typeRegistry[fhirResourceName]
+	instance := reflect.New(fhirResourceType).Elem()
+	setFieldValue(instance, "resourceType", fhirResourceName)
+
+	instances[fhirResourceName] = instance
+
+	return instance
 }
 
 func setField(fhirResource reflect.Value, field *domain.FhirField, value any) reflect.Value {
@@ -122,6 +131,6 @@ func fieldPointer(fhirResource reflect.Value) bool {
 
 func emptySlice(fhirResource reflect.Value, fieldName string) bool {
 	return fhirResource.Kind() != reflect.Pointer &&
-		fhirResource.FieldByName(fieldName).Kind() != reflect.Struct &&
+		fhirResource.FieldByName(fieldName).Kind() != reflect.Struct && //catch error on fieldByName
 		fhirResource.FieldByName(fieldName).Interface() == nil
 }

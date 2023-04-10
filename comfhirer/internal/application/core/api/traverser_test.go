@@ -187,4 +187,75 @@ func TestTraverserBehaviour(t *testing.T) {
 		assert.Equal(t, want, got)
 
 	})
+
+	t.Run("traverse ast with different node name", func(t *testing.T) {
+		name := domain.FhirField{
+			Name:            "name",
+			FieldParsedType: domain.SingleField,
+			FhirField: &domain.FhirField{
+				Name:            "0",
+				FieldParsedType: domain.MultipleNestedField,
+				FhirField: &domain.FhirField{
+					Name:            "given",
+					FieldParsedType: domain.SingleField,
+					FhirField: &domain.FhirField{
+						Name:            "0",
+						FieldParsedType: domain.MultipleValueField,
+					},
+				},
+			},
+		}
+
+		med := domain.FhirField{
+			Name:            "code",
+			FieldParsedType: domain.SingleField,
+			FhirField: &domain.FhirField{
+				Name:            "coding",
+				FieldParsedType: domain.SingleField,
+				FhirField: &domain.FhirField{
+					Name:            "0",
+					FieldParsedType: domain.MultipleNestedField,
+					FhirField: &domain.FhirField{
+						Name:            "code",
+						FieldParsedType: domain.SingleField,
+					},
+				},
+			},
+		}
+		ast := []domain.ASTNode{
+			domain.NewASTNode("Patient", "Jane", name),
+			domain.NewASTNode("Medication", "A09", med)}
+
+		got := traveser.Travers(ast)
+
+		want := domain.Bundle{
+			ResourceType: "Bundle",
+			Entry: []domain.BundleEntry{
+				{
+					Resource: domain.Patient{
+						ResourceType: "Patient",
+						Name: []domain.HumanName{
+							{
+								Given: []string{"Jane"},
+							},
+						},
+					},
+				},
+				{
+					Resource: domain.Medication{
+						ResourceType: "Medication",
+						Code: &domain.CodeableConcept{
+							Coding: []domain.Coding{
+								{
+									Code: "A09",
+								},
+							},
+						},
+					},
+				},
+			},
+		}
+
+		assert.Equal(t, want.Entry, got.Entry)
+	})
 }
