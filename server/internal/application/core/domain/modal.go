@@ -1,4 +1,4 @@
-package serve
+package domain
 
 type Bundle struct {
 	ResourceType string  `default:"bundle"`
