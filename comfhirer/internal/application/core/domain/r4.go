@@ -903,7 +903,7 @@ type Medication struct {
 	/**
 	 * When Medication is referenced from MedicationRequest, this is the ordered form.  When Medication is referenced within MedicationDispense, this is the dispensed form.  When Medication is referenced within MedicationAdministration, this is administered form.
 	 */
-	Form *CodeableConcept `json:"form,omitempty"`
+	DoseForm *CodeableConcept `json:"doseForm,omitempty"`
 	/**
 	 * The serial number could be included as an identifier.
 	 */
@@ -992,7 +992,7 @@ type MedicationIngredient struct {
 	/**
 	 * The actual ingredient - either a substance (simple ingredient) or another medication of a medication.
 	 */
-	ItemCodeableConcept *CodeableConcept `json:"itemCodeableConcept,omitempty"`
+	Item ItemCodeableConcept `json:"item,omitempty"`
 	/**
 	 * The actual ingredient - either a substance (simple ingredient) or another medication of a medication.
 	 */
@@ -1001,4 +1001,8 @@ type MedicationIngredient struct {
 	 * Specifies how many (or how much) of the items there are in this Medication.  For example, 250 mg per tablet.  This is expressed as a ratio where the numerator is 250mg and the denominator is 1 tablet.
 	 */
 	Strength *Ratio `json:"strength,omitempty"`
+}
+
+type ItemCodeableConcept struct {
+	Concept *CodeableConcept `json:"concept,omitempty"`
 }
