@@ -131,6 +131,7 @@ func fieldPointer(fhirResource reflect.Value) bool {
 
 func emptySlice(fhirResource reflect.Value, fieldName string) bool {
 	return fhirResource.Kind() != reflect.Pointer &&
+		fhirResource.FieldByName(fieldName).IsValid() &&
 		fhirResource.FieldByName(fieldName).Kind() != reflect.Struct && //catch error on fieldByName
 		fhirResource.FieldByName(fieldName).Interface() == nil
 }

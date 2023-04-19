@@ -5,14 +5,33 @@ import (
 	"net/http"
 )
 
-type Server struct {
+type Compiler interface {
+	Compile(map[string]any) []byte
 }
 
-func (s Server) ServeHTTP(w http.ResponseWriter, r *http.Request) []byte {
+type Scraper interface {
+	Scrape(file []byte) map[string]any
+}
+
+type Server struct {
+	Compiler
+	Scraper
+}
+
+func NewServer(c Compiler, s Scraper) *Server {
+	return &Server{
+		c,
+		s,
+	}
+}
+
+func (s Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	r.ParseMultipartForm(32 << 20)
 	file, _, _ := r.FormFile("prescription")
 
 	b, _ := io.ReadAll(file)
+	flatFhir := s.Scraper.Scrape(b)
+	fhirMarshal := s.Compiler.Compile(flatFhir)
 
-	return b
+	w.Write(fhirMarshal)
 }

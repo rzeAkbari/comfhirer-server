@@ -11,7 +11,7 @@ func Scrape(file []byte) string {
 
 	python3.Py_Initialize()
 	python3.PyRun_SimpleString("import sys")
-	python3.PyRun_SimpleString("sys.path.insert(0, \"./lib\")")
+	python3.PyRun_SimpleString("sys.path.append(\"/Users/raziehakbari/raz-project/DNF/comfhirer-server/server/internal/application/core/api/lib\")")
 
 	pdfModule := python3.PyImport_ImportModule("pdf_reader")
 	pdfFile := python3.PyByteArray_FromStringAndSize(string(file))

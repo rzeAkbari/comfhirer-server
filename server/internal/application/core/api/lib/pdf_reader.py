@@ -24,12 +24,12 @@ def Do(pdf:bytearray):
     aic = find_pattern(AIC_pattern, cleaned_text)
     farmaco = find_pattern(Farmaco_pattern, cleaned_text)
     principio_attivo = find_pattern(principio_attivo_pattern, cleaned_text)
-    confezione_di_riferimento = find_text (cleaned_text, principio_attivo)
-    Dict = {'nome': nome,
-        'aic_code': aic,
-        'farmaco': farmaco,
-        'principio_attivo': principio_attivo,
-        'Confezione_di_riferimento': confezione_di_riferimento
+    confezione_di_riferimento = find_text(cleaned_text, principio_attivo)
+    Dict = {'Patient.name.[0].given.{0}': nome,
+         'Medication.code.coding.[0].code': aic,
+         'Medication.code.coding.[0].display': farmaco,
+         'Medication.ingredient.[0].item.concept.coding.[0].display': principio_attivo,
+         'Medication.doseForm.coding.[0].display': confezione_di_riferimento
         }
     return json.dumps(Dict)
 

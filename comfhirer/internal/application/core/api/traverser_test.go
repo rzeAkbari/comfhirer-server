@@ -222,6 +222,7 @@ func TestTraverserBehaviour(t *testing.T) {
 				},
 			},
 		}
+
 		ast := []domain.ASTNode{
 			domain.NewASTNode("Patient", "Jane", name),
 			domain.NewASTNode("Medication", "A09", med)}
