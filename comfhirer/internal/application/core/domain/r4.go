@@ -81,13 +81,13 @@ type BundleLink struct {
 	/**
 	 * A name which details the functional use for this link - see [http//www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1](http//www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1).
 	 */
-	Relation  string
-	_Relation *Element
+	Relation  string   `json:"relation,omitempty"`
+	_Relation *Element `json:"_relation,omitempty"`
 	/**
 	 * The reference details for the link.
 	 */
-	Url  string
-	_Url *Element
+	Url  string   `json:"url,omitempty"`
+	_Url *Element `json:"_url,omitempty"`
 }
 
 type BundleSearchMode string
@@ -102,108 +102,108 @@ type BundleEntrySearch struct {
 	/**
 	 * There is only one mode. In some corner cases, a resource may be included because it is both a match and an include. In these circumstances, 'match' takes precedence.
 	 */
-	Mode  *BundleSearchMode
-	_mode *Element
+	Mode  *BundleSearchMode `json:"mode,omitempty"`
+	_mode *Element          `json:"_mode,omitempty"`
 	/**
 	 * Servers are not required to return a ranking score. 1 is most relevant, and 0 is least relevant. Often, search results are sorted by score, but the client may specify a different sort order.
 	 * See [Patient Match](patient-operation-match.html) for the EMPI search which relates to this Element.
 	 */
-	Score int
+	Score int `json:"score,omitempty"`
 }
 
 type BundleEntryRequest struct {
 	/**
 	 * Only perform the operation if the Etag value matches. For more information, see the API section ["Managing Resource Contention"](http.html#concurrency).
 	 */
-	ifMatch  string
-	_ifMatch *Element
+	ifMatch  string   `json:"ifMatch,omitempty"`
+	_ifMatch *Element `json:"_ifMatch,omitempty"`
 	/**
 	 * Only perform the operation if the last updated date matches. See the API documentation for ["Conditional Read"](http.html#cread).
 	 */
-	ifModifiedSince  string
-	_ifModifiedSince *Element
+	ifModifiedSince  string   `json:"ifModifiedSince,omitempty"`
+	_ifModifiedSince *Element `json:"_ifModifiedSince,omitempty"`
 	/**
 	 * Instruct the server not to perform the create if a specified resource already exists. For further information, see the API documentation for ["Conditional Create"](http.html#ccreate). This is just the query portion of the URL - what follows the "" (not including the "").
 	 */
-	ifNoneExist  string
-	_ifNoneExist *Element
+	ifNoneExist  string   `json:"ifNoneExist,omitempty"`
+	_ifNoneExist *Element `json:"_ifNoneExist,omitempty"`
 	/**
 	 * If the ETag values match, return a 304 Not Modified status. See the API documentation for ["Conditional Read"](http.html#cread).
 	 */
-	ifNoneMatch  string
-	_ifNoneMatch *Element
+	ifNoneMatch  string   `json:"ifNoneMatch,omitempty"`
+	_ifNoneMatch *Element `json:"_ifNoneMatch,omitempty"`
 	/**
 	 * In a transaction or batch, this is the HTTP action to be executed for this entry. In a history bundle, this indicates the HTTP action that occurred.
 	 */
-	Method  string
-	_method *Element
+	Method  string   `json:"method,omitempty"`
+	_method *Element `json:"_method,omitempty"`
 	/**
 	 * E.g. for a Patient Create, the method would be "POST" and the URL would be "Patient". For a Patient Update, the method would be PUT and the URL would be "Patient/[id]".
 	 */
-	url  string
-	_url *Element
+	url  string   `json:"url,omitempty"`
+	_url *Element `json:"_url,omitempty"`
 }
 type BundleEntryResponse struct {
 	/**
 	 * Etags match the Resource.meta.versionId. The ETag has to match the version id in the header if a resource is included.
 	 */
-	etag  string
-	_etag *Element
+	etag  string   `json:"etag,omitempty"`
+	_etag *Element `json:"_etag,omitempty"`
 	/**
 	 * This has to match the same time in the meta header (meta.lastUpdated) if a resource is included.
 	 */
-	lastModified  string
-	_lastModified *Element
+	lastModified  string   `json:"lastModified,omitempty"`
+	_lastModified *Element `json:"_lastModified,omitempty"`
 	/**
 	 * The location header created by processing this operation, populated if the operation returns a location.
 	 */
-	location  string
-	_location *Element
+	location  string   `json:"location,omitempty"`
+	_location *Element `json:"_location,omitempty"`
 	/**
 	 * For a POST/PUT operation, this is the equivalent outcome that would be returned for prefer = operationoutcome - except that the resource is always returned whether or not the outcome is returned.
 	 * This outcome is not used for error responses in batch/transaction, only for hints and warnings. In a batch operation, the error will be in Bundle.entry.response, and for transaction, there will be a single OperationOutcome instead of a bundle in the case of an error.
 	 */
-	Outcome any
+	Outcome any `json:"outcome,omitempty"`
 	/**
 	 * The status code returned by processing this entry. The status SHALL start with a 3 digit HTTP code (e.g. 404) and may contain the standard HTTP description associated with the status code.
 	 */
-	status  string
-	_status *Element
+	status  string   `json:"status,omitempty"`
+	_status *Element `json:"_status,omitempty"`
 }
 
 type Signature struct {
 	/**
 	 * Where the signature type is an XML DigSig, the signed content is a FHIR Resource(s), the signature is of the XML form of the Resource(s) using  XML-Signature (XMLDIG) "Detached Signature" form.
 	 */
-	data  string
-	_data *Element
+	data  string   `json:"data,omitempty"`
+	_data *Element `json:"_data,omitempty"`
 	/**
 	 * The party that can't sign. For example a child.
 	 */
-	onBehalfOf Reference
+	onBehalfOf Reference `json:"onBehalfOf,omitempty"`
 	/**
 	 * A mime type that indicates the technical format of the signature. Important mime types are application/signature+xml for X ML DigSig, application/jose for JWS, and image/* for a graphical image of a signature, etc.
 	 */
-	sigFormat  string
-	_sigFormat *Element
+	sigFormat  string   `json:"sigFormat,omitempty"`
+	_sigFormat *Element `json:"_sigFormat,omitempty"`
 	/**
 	 * "xml", "json" and "ttl" are allowed, which describe the simple encodings described in the specification (and imply appropriate bundle support). Otherwise, mime types are legal here.
 	 */
-	targetFormat  string
-	_targetFormat *Element
+	targetFormat  string   `json:"targetFormat,omitempty"`
+	_targetFormat *Element `json:"_targetFormat,omitempty"`
 	/**
 	 * Examples include attesting to authorship, correct transcription, and witness of specific event. Also known as a &quotCommitment Type Indication&quot.
 	 */
-	Type []Coding
+	Type []Coding `json:"type,omitempty"`
 	/**
 	 * This should agree with the information in the signature.
 	 */
-	when  string
-	_when *Element
+	when  string   `json:"when,omitempty"`
+	_when *Element `json:"_when,omitempty"`
 	/**
 	 * This should agree with the information in the signature.
 	 */
-	who *Reference
+	who *Reference `json:"who,omitempty"`
 }
 
 type Gender string
@@ -219,42 +219,42 @@ type BackboneElement struct {
 	/**
 	 * There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.
 	 */
-	ModifierExtension []Extension
+	ModifierExtension []Extension `json:"modifierExtension,omitempty"`
 }
 type Element struct {
 	/**
 	 * There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.
 	 */
-	Extension []Extension
+	Extension []Extension `json:"extension,omitempty"`
 	/**
 	 * Unique id for the *Element within a resource (for internal references). This may be any string value that does not contain spaces.
 	 */
-	ID  string
-	_ID *Element
+	ID  string   `json:"id,omitempty"`
+	_ID *Element `json:"_id,omitempty"`
 }
 
 type Resource struct {
 	/** Resource Type Name (for serialization) */
-	ResourceType string
+	ResourceType string `json:"resourceType"`
 	/**
 	 * The only time that a resource does not have an id is when it is being submitted to the server using a create operation.
 	 */
-	ID  string
-	_ID *Element
+	ID  string   `json:"id,omitempty"`
+	_ID *Element `json:"_id,omitempty"`
 	/**
 	 * Asserting this rule set restricts the content to be only understood by a limited set of trading partners. This inherently limits the usefulness of the data in the long term. However, the existing health eco-system is highly fractured, and not yet ready to define, collect, and exchange data in a generally computable sense. Wherever possible, implementers and/or specification writers should avoid using this *Element. Often, when used, the URL is a reference to an implementation guide that defines these special rules as part of it's narrative along with other profiles, value sets, etc.
 	 */
-	ImplicitRules  string
-	_ImplicitRules *Element
+	ImplicitRules  string   `json:"implicitRules,omitempty"`
+	_ImplicitRules *Element `json:"_implicitRules,omitempty"`
 	/**
 	 * Language is provided to support indexing and accessibility (typically, services such as text to speech use the language tag). The html language tag in the narrative applies  to the narrative. The language tag on the resource may be used to specify the language of other presentations generated from the data in the resource. Not all the content has to be in the base language. The Resource.language should not be assumed to apply to the narrative automatically. If a language is specified, it should it also be specified on the div *Element in the html (see rules in HTML5 for information about the relationship between xmllang and the html lang attribute).
 	 */
-	Language  string
-	_Language *Element
+	Language  string   `json:"language,omitempty"`
+	_Language *Element `json:"_language,omitempty"`
 	/**
 	 * The metadata about the resource. This is content that is maintained by the infrastructure. Changes to the content might not always be associated with version changes to the resource.
 	 */
-	meta Meta
+	meta Meta `json:"meta,omitempty"`
 }
 
 type Meta struct {
@@ -262,60 +262,60 @@ type Meta struct {
 	/**
 	 * This value is always populated except when the resource is first being created. The server / resource manager sets this value what a client provides is irrelevant. This is equivalent to the HTTP Last-Modified and SHOULD have the same value on a [read](http.html#read) interaction.
 	 */
-	LastUpdated  string
-	_LastUpdated *Element
+	LastUpdated  string   `json:"lastUpdated,omitempty"`
+	_LastUpdated *Element `json:"_LastUpdated,omitempty"`
 	/**
 	 * It is up to the server and/or other infrastructure of policy to determine whether/how these claims are verified and/or updated over time.  The list of profile URLs is a set.
 	 */
-	Profile  []string
-	_Profile []*Element
+	Profile  []string   `json:"profile,omitempty"`
+	_Profile []*Element `json:"_profile,omitempty"`
 	/**
 	 * The security labels can be updated without changing the stated version of the resource. The list of security labels is a set. Uniqueness is based the system/code, and version and display are ignored.
 	 */
-	Security []Coding
+	Security []Coding `json:"security,omitempty"`
 	/**
 	 * In the provenance resource, this corresponds to Provenance.entity.what[x]. The exact use of the source (and the implied Provenance.entity.role) is left to implementer discretion. Only one nominated source is allowed for additional provenance details, a full Provenance resource should be used.
 	 * This *Element can be used to indicate where the current master source of a resource that has a canonical URL if the resource is no longer hosted at the canonical URL.
 	 */
-	Source  string
-	_Source *Element
+	Source  string   `json:"source,omitempty"`
+	_Source *Element `json:"_source,omitempty"`
 	/**
 	 * The tags can be updated without changing the stated version of the resource. The list of tags is a set. Uniqueness is based the system/code, and version and display are ignored.
 	 */
-	Tag []Coding
+	Tag []Coding `json:"tag,omitempty"`
 	/**
 	 * The server assigns this value, and ignores what the client specifies, except in the case that the server is imposing version integrity on updates/deletes.
 	 */
-	VersionId  string
-	_VersionId *Element
+	VersionId  string   `json:"versionId,omitempty"`
+	_VersionId *Element `json:"_versionId,omitempty"`
 }
 
 type Coding struct {
 	/**
 	 * A symbol in syntax defined by the system. The symbol may be a predefined code or an expression in a syntax defined by the coding system (e.g. post-coordination).
 	 */
-	Code  string
-	_Code *Element
+	Code  string   `json:"code,omitempty"`
+	_Code *Element `json:"_code,omitempty"`
 	/**
 	 * A representation of the meaning of the code in the system, following the rules of the system.
 	 */
-	Display  string
-	_Display *Element
+	Display  string   `json:"display,omitempty"`
+	_Display *Element `json:"_display,omitempty"`
 	/**
 	 * The URI may be an OID (urnoid...) or a UUID (urnuuid...).  OIDs and UUIDs SHALL be references to the HL7 OID registry. Otherwise, the URI should come from HL7's list of FHIR defined special URIs or it should reference to some definition that establishes the system clearly and unambiguously.
 	 */
-	System  string
-	_system *Element
+	System  string   `json:"system,omitempty"`
+	_system *Element `json:"_system,omitempty"`
 	/**
 	 * Amongst a set of alternatives, a directly chosen code is the most appropriate starting point for new translations. There is some ambiguity about what exactly 'directly chosen' implies, and trading partner agreement may be needed to clarify the use of this *Element and its consequences more completely.
 	 */
-	UserSelected  bool
-	_UserSelected *Element
+	UserSelected  bool     `json:"userSelected,omitempty"`
+	_UserSelected *Element `json:"_userSelected,omitempty"`
 	/**
 	 * Where the terminology does not clearly define what string should be used to identify code system versions, the recommendation is to use the date (expressed in FHIR date format) on which that version was officially published as the version date.
 	 */
-	Version  string
-	_Version *Element
+	Version  string   `json:"version,omitempty"`
+	_Version *Element `json:"_version,omitempty"`
 }
 
 type Extension struct {
@@ -323,104 +323,104 @@ type Extension struct {
 	/**
 	 * The definition may point directly to a computable or human-readable definition of the extensibility codes, or it may be a logical URI as declared in some other specification. The definition SHALL be a URI for the Structure Definition defining the extension.
 	 */
-	Url  string
-	_Url *Element
+	Url  string   `json:"url,omitempty"`
+	_Url *Element `json:"_url,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueBase64Binary  string
-	_ValueBase64Binary *Element
+	ValueBase64Binary  string   `json:"valueBase64Binary,omitempty"`
+	_ValueBase64Binary *Element `json:"_valueBase64Binary,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueBoolean  bool
-	_ValueBoolean *Element
+	ValueBoolean  bool     `json:"valueBoolean,omitempty"`
+	_ValueBoolean *Element `json:"_valueBoolean,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueCanonical  string
-	_ValueCanonical *Element
+	ValueCanonical  string   `json:"valueCanonical,omitempty"`
+	_ValueCanonical *Element `json:"_valueCanonical,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueCode  string
-	_ValueCode *Element
+	ValueCode  string   `json:"valueCode,omitempty"`
+	_ValueCode *Element `json:"_valueCode,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueDate  string
-	_ValueDate *Element
+	ValueDate  string   `json:"valueDate,omitempty"`
+	_ValueDate *Element `json:"_valueDate,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueDateTime  string
-	_ValueDateTime *Element
+	ValueDateTime  string   `json:"valueDateTime,omitempty"`
+	_ValueDateTime *Element `json:"_valueDateTime,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueDecimal float64
+	ValueDecimal float64 `json:"valueDecimal,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueID  string
-	_ValueID *Element
+	ValueID  string   `json:"valueId,omitempty"`
+	_ValueID *Element `json:"_valueId,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueInstant  string
-	_ValueInstant *Element
+	ValueInstant  string   `json:"valueInstant,omitempty"`
+	_ValueInstant *Element `json:"_valueInstant,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	valueInteger int
+	valueInteger int `json:"valueInteger,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueMarkdown  string
-	_ValueMarkdown *Element
+	ValueMarkdown  string   `json:"valueMarkdown,omitempty"`
+	_ValueMarkdown *Element `json:"_valueMarkdown,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueOid  string
-	_ValueOid *Element
+	ValueOid  string   `json:"valueOid,omitempty"`
+	_ValueOid *Element `json:"_valueOid,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValuePositiveInt int
+	ValuePositiveInt int `json:"valuePositiveInt,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueString  string
-	_ValueString *Element
+	ValueString  string   `json:"valueString,omitempty"`
+	_ValueString *Element `json:"_valueString,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueTime  string
-	_ValueTime *Element
+	ValueTime  string   `json:"valueTime,omitempty"`
+	_ValueTime *Element `json:"_valueTime,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	valueUnsignedInt uint
+	valueUnsignedInt uint `json:"valueUnsignedInt,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueUri  string
-	_ValueUri *Element
+	ValueUri  string   `json:"valueUri,omitempty"`
+	_ValueUri *Element `json:"_valueUri,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueUrl  string
-	_ValueUrl *Element
+	ValueUrl  string   `json:"valueUrl,omitempty"`
+	_ValueUrl *Element `json:"_valueUrl,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
-	ValueUuid  string
-	_ValueUuid *Element
+	ValueUuid  string   `json:"valueUuid,omitempty"`
+	_ValueUuid *Element `json:"_valueUuid,omitempty"`
 	/**
 	 * Value of extension - must be one of a constrained set of the data types (see [Extensibility](extensibility.html) for a list).
 	 */
 
-	valueMeta *Meta
+	valueMeta *Meta `json:"valueMeta,omitempty"`
 }
 
 type Patient struct {
@@ -534,121 +534,121 @@ type Address struct {
 	/**
 	 * The name of the city, town, suburb, village or other community or delivery center.
 	 */
-	City  string
-	_City *Element
+	City  string   `json:"city,omitempty"`
+	_City *Element `json:"_city,omitempty"`
 	/**
 	 * ISO 3166 3 letter codes can be used in place of a human readable country name.
 	 */
-	Country  string
-	_Country *Element
+	Country  string   `json:"country,omitempty"`
+	_Country *Element `json:"_country,omitempty"`
 	/**
 	 * District is sometimes known as county, but in some regions 'county' is used in place of city (municipality), so county name should be conveyed in city instead.
 	 */
-	District  string
-	_District *Element
+	District  string   `json:"district,omitempty"`
+	_District *Element `json:"_district,omitempty"`
 	/**
 	 * This component contains the house number, apartment number, street name, street direction,  P.O. Box number, delivery hints, and similar address information.
 	 */
-	Line  []string
-	_Line []*Element
+	Line  []string   `json:"line,omitempty"`
+	_Line []*Element `json:"_line,omitempty"`
 	/**
 	 * Time period when address was/is in use.
 	 */
-	Period *Period
+	Period *Period `json:"period,omitempty"`
 	/**
 	 * A postal code designating a region defined by the postal service.
 	 */
-	PostalCode  string
-	_PostalCode *Element
+	PostalCode  string   `json:"postalCode,omitempty"`
+	_PostalCode *Element `json:"_postalCode,omitempty"`
 	/**
 	 * Sub-unit of a country with limited sovereignty in a federally organized country. A code may be used if codes are in common use (e.g. US 2 letter state codes).
 	 */
-	State  string
-	_State *Element
+	State  string   `json:"state,omitempty"`
+	_State *Element `json:"_state,omitempty"`
 	/**
 	 * Can provide both a text representation and parts. Applications updating an address SHALL ensure that  when both text and parts are present,  no content is included in the text that isn't found in a part.
 	 */
-	Text  string
-	_Text *Element
+	Text  string   `json:"text,omitempty"`
+	_Text *Element `json:"_text,omitempty"`
 	/**
 	 * The definition of Address states that "address is intended to describe postal addresses, not physical locations". However, many applications track whether an address has a dual purpose of being a location that can be visited as well as being a valid delivery destination, and Postal addresses are often used as proxies for physical locations (also see the [Location](location.html#) resource).
 	 */
-	Type  AddressType
-	_Type *Element
+	Type  AddressType `json:"type,omitempty"`
+	_Type *Element    `json:"_type,omitempty"`
 	/**
 	 * Applications can assume that an address is current unless it explicitly says that it is temporary or old.
 	 */
-	Use  AddressUse
-	_Use *Element
+	Use  AddressUse `json:"use,omitempty"`
+	_Use *Element   `json:"_use,omitempty"`
 }
 
 type Period struct {
 	/**
 	 * The high value includes any matching date/time. i.e. 2012-02-03T100000 is in a period that has an end value of 2012-02-03.
 	 */
-	End  string
-	_End *Element
+	End  string   `json:"end,omitempty"`
+	_End *Element `json:"_end,omitempty"`
 	/**
 	 * If the low *Element is missing, the meaning is that the low boundary is not known.
 	 */
-	Start  string
-	_Start *Element
+	Start  string   `json:"start,omitempty"`
+	_Start *Element `json:"_start,omitempty"`
 }
 
 type PatientCommunication struct {
 	/**
 	 * The structure aa-BB with this exact casing is one the most widely used notations for locale. However not all systems actually code this but instead have it as free text. Hence CodeableConcept instead of code as the data type.
 	 */
-	Language *CodeableConcept
+	Language *CodeableConcept `json:"language,omitempty"`
 	/**
 	 * This language is specifically identified for communicating healthcare information.
 	 */
-	Preferred  bool
-	_Preferred *Element
+	Preferred  bool     `json:"preferred,omitempty"`
+	_Preferred *Element `json:"_preferred,omitempty"`
 }
 
 type CodeableConcept struct {
 	/**
 	 * Codes may be defined very casually in enumerations, or code lists, up to very formal definitions such as SNOMED CT - see the HL7 v3 Core Principles for more information.  Ordering of codings is undefined and SHALL NOT be used to infer meaning. Generally, at most only one of the coding values will be labeled as UserSelected = true.
 	 */
-	Coding []Coding
+	Coding []Coding `json:"coding,omitempty"`
 	/**
 	 * Very often the text is the same as a displayName of one of the codings.
 	 */
-	Text  string
-	_Text *Element
+	Text  string   `json:"text,omitempty"`
+	_Text *Element `json:"_text,omitempty"`
 }
 
 type PatientContact struct {
 	/**
 	 * Address for the contact person.
 	 */
-	Address *Address
+	Address *Address `json:"address,omitempty"`
 	/**
 	 * Administrative Gender - the gender that the contact person is considered to have for administration and record keeping purposes.
 	 */
-	Gender  Gender
-	_gender *Element
+	Gender  Gender   `json:"gender,omitempty"`
+	_gender *Element `json:"_gender,omitempty"`
 	/**
 	 * A name associated with the contact person.
 	 */
-	Name *HumanName
+	Name *HumanName `json:"name,omitempty"`
 	/**
 	 * Organization on behalf of which the contact is acting or for which the contact is working.
 	 */
-	Organization *Reference
+	Organization *Reference `json:"organization,omitempty"`
 	/**
 	 * The period during which this contact person or organization is valid to be contacted relating to this patient.
 	 */
-	Period *Period
+	Period *Period `json:"period,omitempty"`
 	/**
 	 * The nature of the relationship between the patient and the contact person.
 	 */
-	Relationship []CodeableConcept
+	Relationship []CodeableConcept `json:"relationship,omitempty"`
 	/**
 	 * Contact may have multiple ways to be contacted with different uses or applicable periods.  May need to have options for contacting the person urgently, and also to help with identification.
 	 */
-	Telecom []ContactPoint
+	Telecom []ContactPoint `json:"telecom,omitempty"`
 }
 
 type HumanNameUse string
@@ -667,37 +667,37 @@ type HumanName struct {
 	/**
 	 * Family Name may be decomposed into specific parts using extensions (de, nl, es related cultures).
 	 */
-	Family  string
-	_Family *Element
+	Family  string   `json:"family,omitempty"`
+	_Family *Element `json:"_family,omitempty"`
 	/**
 	 * If only initials are recorded, they may be used in place of the full name parts. Initials may be separated into multiple given names but often aren't due to paractical limitations.  This *Element is not called "first name" since given names do not always come first.
 	 */
-	Given  []string
-	_Given []*Element
+	Given  []string   `json:"given,omitempty"`
+	_Given []*Element `json:"_given,omitempty"`
 	/**
 	 * Indicates the period of time when this name was valid for the named person.
 	 */
-	Period *Period
+	Period *Period `json:"period,omitempty"`
 	/**
 	 * Part of the name that is acquired as a title due to academic, legal, employment or nobility status, etc. and that appears at the start of the name.
 	 */
-	Prefix  []string
-	_Prefix []*Element
+	Prefix  []string   `json:"prefix,omitempty"`
+	_Prefix []*Element `json:"_prefix,omitempty"`
 	/**
 	 * Part of the name that is acquired as a title due to academic, legal, employment or nobility status, etc. and that appears at the end of the name.
 	 */
-	Suffix  []string
-	_Suffix []*Element
+	Suffix  []string   `json:"suffix,omitempty"`
+	_Suffix []*Element `json:"_suffix,omitempty"`
 	/**
 	 * Can provide both a text representation and parts. Applications updating a name SHALL ensure that when both text and parts are present,  no content is included in the text that isn't found in a part.
 	 */
-	Text  string
-	_Text *Element
+	Text  string   `json:"text,omitempty"`
+	_Text *Element `json:"_text,omitempty"`
 	/**
 	 * Applications can assume that a name is current unless it explicitly says that it is temporary or old.
 	 */
-	Use  *HumanNameUse
-	_Use *Element
+	Use  *HumanNameUse `json:"use,omitempty"`
+	_Use *Element      `json:"_use,omitempty"`
 }
 
 type IdentifierUse string
@@ -714,55 +714,55 @@ type Identifier struct {
 	/**
 	 * The Identifier.assigner may omit the .reference *Element and only contain a .display *Element reflecting the name or other textual information about the assigning organization.
 	 */
-	Assigner *Reference
+	Assigner *Reference `json:"assigner,omitempty"`
 	/**
 	 * Time period during which identifier is/was valid for use.
 	 */
-	Period *Period
+	Period *Period `json:"period,omitempty"`
 	/**
 	 * Identifier.system is always case sensitive.
 	 */
-	System  string
-	_System *Element
+	System  string   `json:"system,omitempty"`
+	_System *Element `json:"_system,omitempty"`
 	/**
 	 * This *Element deals only with general categories of identifiers.  It SHOULD not be used for codes that correspond 1..1 with the Identifier.system. Some identifiers may fall into multiple categories due to common usage.   Where the system is known, a type is unnecessary because the type is always part of the system definition. However systems often need to handle identifiers where the system is not known. There is not a 11 relationship between type and system, since many different systems have the same type.
 	 */
-	Type *CodeableConcept
+	Type *CodeableConcept `json:"type,omitempty"`
 	/**
 	 * Applications can assume that an identifier is permanent unless it explicitly says that it is temporary.
 	 */
-	Use  IdentifierUse
-	_Use *Element
+	Use  IdentifierUse `json:"use,omitempty"`
+	_Use *Element      `json:"_use,omitempty"`
 	/**
 	 * If the value is a full URI, then the system SHALL be urnietfrfc3986.  The value's primary purpose is computational mapping.  As a result, it may be normalized for comparison purposes (e.g. removing non-significant whitespace, dashes, etc.)  A value formatted for human display can be conveyed using the [Rendered Value extension](extension-rendered-value.html). Identifier.value is to be treated as case sensitive unless knowledge of the Identifier.system allows the processer to be confident that non-case-sensitive processing is safe.
 	 */
-	Value  string
-	_Value *Element
+	Value  string   `json:"value,omitempty"`
+	_Value *Element `json:"_value,omitempty"`
 }
 
 type Reference struct {
 	/**
 	 * This is generally not the same as the Resource.text of the referenced resource.  The purpose is to identify what's being referenced, not to fully describe it.
 	 */
-	Display  string
-	_Display *Element
+	Display  string   `json:"display,omitempty"`
+	_Display *Element `json:"_display,omitempty"`
 	/**
 	 * When an identifier is provided in place of a reference, any system processing the reference will only be able to resolve the identifier to a reference if it understands the business context in which the identifier is used. Sometimes this is global (e.g. a national identifier) but often it is not. For this reason, none of the useful mechanisms described for working with references (e.g. chaining, includes) are possible, nor should servers be expected to be able resolve the reference. Servers may accept an identifier based reference untouched, resolve it, and/or reject it - see CapabilityStatement.rest.resource.referencePolicy.
 	 * When both an identifier and a literal reference are provided, the literal reference is preferred. Applications processing the resource are allowed - but not required - to check that the identifier matches the literal reference
 	 * Applications converting a logical reference to a literal reference may choose to leave the logical reference present, or remove it.
 	 * Reference is intended to point to a structure that can potentially be expressed as a FHIR resource, though there is no need for it to exist as an actual FHIR resource instance - except in as much as an application wishes to actual find the target of the reference. The content referred to be the identifier must meet the logical constraints implied by any limitations on what resource types are permitted for the reference.  For example, it would not be legitimate to send the identifier for a drug prescription if the type were Reference(Observation|DiagnosticReport).  One of the use-cases for Reference.identifier is the situation where no FHIR representation exists (where the type is Reference (Any).
 	 */
-	Identifier *Identifier
+	Identifier *Identifier `json:"identifier,omitempty"`
 	/**
 	 * Using absolute URLs provides a stable scalable approach suitable for a cloud/web context, while using relative/logical references provides a flexible approach suitable for use when trading across closed eco-system boundaries.   Absolute URLs do not need to point to a FHIR RESTful server, though this is the preferred approach. If the URL conforms to the structure "/[type]/[id]" then it should be assumed that the reference is to a FHIR RESTful server.
 	 */
-	Reference  string
-	_Reference *Element
+	Reference  string   `json:"reference,omitempty"`
+	_Reference *Element `json:"_reference,omitempty"`
 	/**
 	 * This *Element is used to indicate the type of  the target of the reference. This may be used which ever of the other *Elements are populated (or not). In some cases, the type of the target may be determined by inspection of the reference (e.g. a RESTful URL) or by resolving the target of the reference if both the type and a reference is provided, the reference SHALL resolve to a resource of the same type as that specified.
 	 */
-	Type  string
-	_Type *Element
+	Type  string   `json:"type,omitempty"`
+	_Type *Element `json:"_type,omitempty"`
 }
 
 type ContactPointSystem string
@@ -791,26 +791,26 @@ type ContactPoint struct {
 	/**
 	 * Time period when the contact point was/is in use.
 	 */
-	period *Period
+	period *Period `json:"period,omitempty"`
 	/**
 	 * Note that rank does not necessarily follow the order in which the contacts are represented in the instance.
 	 */
-	rank int
+	rank int `json:"rank,omitempty"`
 	/**
 	 * Telecommunications form for contact point - what communications system is required to make use of the contact.
 	 */
-	System  *ContactPointSystem
-	_System *Element
+	System  *ContactPointSystem `json:"system,omitempty"`
+	_System *Element            `json:"_system,omitempty"`
 	/**
 	 * Applications can assume that a contact is current unless it explicitly says that it is temporary or old.
 	 */
-	Use  ContactPointUse
-	_Use *Element
+	Use  ContactPointUse `json:"use,omitempty"`
+	_Use *Element        `json:"_use,omitempty"`
 	/**
 	 * Additional text data such as phone extension numbers, or notes about use of the contact are sometimes included in the value.
 	 */
-	Value  string
-	_Value *Element
+	Value  string   `json:"value,omitempty"`
+	_Value *Element `json:"_value,omitempty"`
 }
 
 type Attachment struct {
@@ -818,42 +818,42 @@ type Attachment struct {
 	/**
 	 * Identifies the type of the data in the attachment and allows a method to be chosen to interpret or render the data. Includes mime type parameters such as charset where appropriate.
 	 */
-	ContentType  string
-	_ContentType *Element
+	ContentType  string   `json:"contentType,omitempty"`
+	_ContentType *Element `json:"_contentType,omitempty"`
 	/**
 	 * The date that the attachment was first created.
 	 */
-	Creation  string
-	_Creation *Element
+	Creation  string   `json:"creation,omitempty"`
+	_Creation *Element `json:"_creation,omitempty"`
 	/**
 	 * The base64-encoded data SHALL be expressed in the same character set as the base resource XML or JSON.
 	 */
-	Data  string
-	_Data *Element
+	Data  string   `json:"data,omitempty"`
+	_Data *Element `json:"_data,omitempty"`
 	/**
 	 * The hash is calculated on the data prior to base64 encoding, if the data is based64 encoded. The hash is not intended to support digital signatures. Where protection against malicious threats a digital signature should be considered, see [Provenance.signature](provenance-definitions.html#Provenance.signature) for mechanism to protect a resource with a digital signature.
 	 */
-	Hash  string
-	_Hash *Element
+	Hash  string   `json:"hash,omitempty"`
+	_Hash *Element `json:"_hash,omitempty"`
 	/**
 	 * The human language of the content. The value can be any valid value according to BCP 47.
 	 */
-	Language  string
-	_Language *Element
+	Language  string   `json:"language,omitempty"`
+	_Language *Element `json:"_language,omitempty"`
 	/**
 	 * The number of bytes is redundant if the data is provided as a base64binary, but is useful if the data is provided as a url reference.
 	 */
-	Size int
+	Size int `json:"size,omitempty"`
 	/**
 	 * A label or set of text to display in place of the data.
 	 */
-	Title  string
-	_Title *Element
+	Title  string   `json:"title,omitempty"`
+	_Title *Element `json:"_title,omitempty"`
 	/**
 	 * If both data and url are provided, the url SHALL point to the same content as the data contains. Urls may be relative references or may reference transient locations such as a wrapping envelope using cid though this has ramifications for using signatures. Relative URLs are interpreted relative to the service url, like a resource reference, rather than relative to the resource itself. If a URL is provided, it SHALL resolve to actual data.
 	 */
-	Url  string
-	_Url *Element
+	Url  string   `json:"url,omitempty"`
+	_Url *Element `json:"_url,omitempty"`
 }
 type PatientLinkType string
 
@@ -865,16 +865,16 @@ const (
 )
 
 type PatientLink struct {
-	BackboneElement
+	BackboneElement `json:"backboneElement,omitempty"`
 	/**
 	 * Referencing a RelatedPerson here removes the need to use a Person record to associate a Patient and RelatedPerson as the same individual.
 	 */
-	Other *Reference
+	Other *Reference `json:"other,omitempty"`
 	/**
 	 * The type of link between this patient resource and another patient resource.
 	 */
-	Type  PatientLinkType
-	_Type *Element
+	Type  PatientLinkType `json:"type,omitempty"`
+	_Type *Element        `json:"_type,omitempty"`
 }
 type MedicationStatus string
 
@@ -887,7 +887,7 @@ const (
 type Medication struct {
 
 	/** Resource Type Name (for serialization) */
-	ResourceType string
+	ResourceType string `json:"resourceType"`
 	/**
 	 * Specific amount of the drug in the packaged product.  For example, when specifying a product that has the same strength (For example, Insulin glargine 100 unit per mL solution for injection), this attribute provides additional clarification of the package amount (For example, 3 mL, 10mL, etc.).
 	 */
