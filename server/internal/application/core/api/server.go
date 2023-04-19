@@ -32,6 +32,7 @@ func (s Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	b, _ := io.ReadAll(file)
 	flatFhir := s.Scraper.Scrape(b)
 	fhirMarshal := s.Compiler.Compile(flatFhir)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	w.Write(fhirMarshal)
 }
