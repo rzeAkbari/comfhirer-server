@@ -1002,7 +1002,6 @@ type MedicationIngredient struct {
 	 */
 	Strength *Ratio `json:"strength,omitempty"`
 }
-
 type ItemCodeableConcept struct {
 	Concept *CodeableConcept `json:"concept,omitempty"`
 }
