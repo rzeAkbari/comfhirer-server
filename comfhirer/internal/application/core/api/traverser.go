@@ -53,7 +53,23 @@ func setField(fhirResource reflect.Value, field *domain.FhirField, value any) re
 	nestedField := field.FhirField
 
 	if field.FieldParsedType == domain.MultipleValueField {
-		fhirResource.Set(reflect.Append(fhirResource, reflect.ValueOf(value)))
+		index, _ := strconv.Atoi(field.Name)
+
+		if addNewFhirField(fhirResource, index) {
+			fhirResource.Set(reflect.Append(fhirResource, reflect.ValueOf(value)))
+		}
+		if hasToPopulate(fhirResource, index) {
+			for i := 0; i < index; i++ {
+				placeHolder := reflect.ValueOf(value)
+				fhirResource.Set(reflect.Append(fhirResource, placeHolder))
+			}
+			fhirResource.Set(reflect.Append(fhirResource, reflect.ValueOf(value)))
+		}
+		if containsFhirField(fhirResource, index) {
+			position := fhirResource.Index(index)
+			position.Set(reflect.ValueOf(value))
+		}
+
 		return fhirResource
 	}
 	if nestedField == nil {
