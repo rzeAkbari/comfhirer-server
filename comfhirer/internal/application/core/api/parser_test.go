@@ -12,11 +12,12 @@ func TestParserBehaviour(t *testing.T) {
 	t.Run("parse token with resource", func(t *testing.T) {
 		lexemes := domain.Lexemes{
 			ResourceToken: "Patient",
+			Index:         "0",
 			ValueToken:    "",
 		}
 
 		got := parser.Parse(lexemes)
-		want := domain.NewASTNode("Patient", "", domain.FhirField{})
+		want := domain.NewASTNode("Patient", "", domain.FhirField{}, "0")
 
 		assert.Equal(t, want, got)
 	})
@@ -27,6 +28,7 @@ func TestParserBehaviour(t *testing.T) {
 		}
 		lexemes := domain.Lexemes{
 			ResourceToken: "Patient",
+			Index:         "0",
 			FieldToken:    tokens,
 			ValueToken:    "20-12-1988",
 		}
@@ -37,7 +39,7 @@ func TestParserBehaviour(t *testing.T) {
 			Name:            "birthDate",
 			FieldParsedType: domain.SingleField,
 		}
-		want := domain.NewASTNode("Patient", "20-12-1988", field)
+		want := domain.NewASTNode("Patient", "20-12-1988", field, "0")
 
 		assert.Equal(t, want, got)
 	})
@@ -50,6 +52,7 @@ func TestParserBehaviour(t *testing.T) {
 		}
 		lexemes := domain.Lexemes{
 			ResourceToken: "Patient",
+			Index:         "1",
 			FieldToken:    tokens,
 			ValueToken:    1,
 		}
@@ -68,7 +71,7 @@ func TestParserBehaviour(t *testing.T) {
 				},
 			},
 		}
-		want := domain.NewASTNode("Patient", 1, field)
+		want := domain.NewASTNode("Patient", 1, field, "1")
 
 		assert.Equal(t, want, got)
 	})
@@ -82,6 +85,7 @@ func TestParserBehaviour(t *testing.T) {
 		}
 		lexemes := domain.Lexemes{
 			ResourceToken: "Patient",
+			Index:         "1",
 			FieldToken:    tokens,
 			ValueToken:    "Jane",
 		}
@@ -104,7 +108,7 @@ func TestParserBehaviour(t *testing.T) {
 				},
 			},
 		}
-		want := domain.NewASTNode("Patient", "Jane", field)
+		want := domain.NewASTNode("Patient", "Jane", field, "1")
 
 		assert.Equal(t, want, got)
 

@@ -15,6 +15,7 @@ func TestTokenizeBehaviour(t *testing.T) {
 		got := tokenizer.Tokenize("Patient", "")
 		want := domain.Lexemes{
 			ResourceToken: "Patient",
+			Index:         "0",
 			ValueToken:    "",
 		}
 		assert.Equal(t, want, got)
@@ -28,10 +29,24 @@ func TestTokenizeBehaviour(t *testing.T) {
 		}
 		want := domain.Lexemes{
 			ResourceToken: "Patient",
+			Index:         "0",
 			FieldToken:    tokens,
 			ValueToken:    "20-12-1988",
 		}
 
+		assert.Equal(t, want, got)
+	})
+
+	t.Run("tokenize resource with index and string data", func(t *testing.T) {
+		got := tokenizer.Tokenize("Patient.(1).birthDate", "20-12-1988")
+		tokens := []domain.FieldToken{
+			domain.NewToken(domain.SimpleField, "birthDate"),
+		}
+		want := domain.Lexemes{
+			ResourceToken: "Patient",
+			Index:         "1",
+			FieldToken:    tokens,
+			ValueToken:    "20-12-1988"}
 		assert.Equal(t, want, got)
 	})
 
@@ -42,6 +57,7 @@ func TestTokenizeBehaviour(t *testing.T) {
 		}
 		want := domain.Lexemes{
 			ResourceToken: "Person",
+			Index:         "0",
 			FieldToken:    tokens,
 			ValueToken:    true,
 		}
@@ -58,6 +74,7 @@ func TestTokenizeBehaviour(t *testing.T) {
 
 		want := domain.Lexemes{
 			ResourceToken: "Patient",
+			Index:         "0",
 			FieldToken:    tokens,
 			ValueToken:    1,
 		}
@@ -75,6 +92,7 @@ func TestTokenizeBehaviour(t *testing.T) {
 		}
 		want := domain.Lexemes{
 			ResourceToken: "Patient",
+			Index:         "0",
 			FieldToken:    tokens,
 			ValueToken:    "Jane",
 		}

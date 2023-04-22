@@ -1,4 +1,4 @@
-package domain
+package e2e
 
 type Bundle struct {
 	/** Resource Type Name (for serialization) */

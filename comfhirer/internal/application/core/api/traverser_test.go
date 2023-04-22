@@ -15,7 +15,7 @@ func TestTraverserBehaviour(t *testing.T) {
 			Name:            "birthDate",
 			FieldParsedType: domain.SingleField,
 		}
-		ast := []domain.ASTNode{domain.NewASTNode("Patient", "20-12-1988", field)}
+		ast := []domain.ASTNode{domain.NewASTNode("Patient", "20-12-1988", field, "0")}
 
 		got := traveser.Travers(ast)
 
@@ -52,7 +52,7 @@ func TestTraverserBehaviour(t *testing.T) {
 				},
 			},
 		}
-		ast := []domain.ASTNode{domain.NewASTNode("Patient", "M", field)}
+		ast := []domain.ASTNode{domain.NewASTNode("Patient", "M", field, "0")}
 
 		got := traveser.Travers(ast)
 
@@ -67,6 +67,63 @@ func TestTraverserBehaviour(t *testing.T) {
 								{
 									Code: "M",
 								},
+							},
+						},
+					},
+				},
+			},
+		}
+
+		assert.Equal(t, want, got)
+
+	})
+
+	t.Run("traverse ast with multiple comfhirer position ", func(t *testing.T) {
+		identifierTwo := domain.FhirField{
+			Name:            "identifier",
+			FieldParsedType: domain.SingleField,
+			FhirField: &domain.FhirField{
+				Name:            "1",
+				FieldParsedType: domain.MultipleNestedField,
+				FhirField: &domain.FhirField{
+					Name:            "use",
+					FieldParsedType: domain.SingleField,
+				},
+			},
+		}
+
+		identifierThree := domain.FhirField{
+			Name:            "identifier",
+			FieldParsedType: domain.SingleField,
+			FhirField: &domain.FhirField{
+				Name:            "2",
+				FieldParsedType: domain.MultipleNestedField,
+				FhirField: &domain.FhirField{
+					Name:            "use",
+					FieldParsedType: domain.SingleField,
+				},
+			},
+		}
+
+		ast := []domain.ASTNode{
+			domain.NewASTNode("Patient", "usual", identifierTwo, "0"),
+			domain.NewASTNode("Patient", "official", identifierThree, "0")}
+
+		got := traveser.Travers(ast)
+
+		want := domain.Bundle{
+			ResourceType: "Bundle",
+			Entry: []domain.BundleEntry{
+				{
+					Resource: domain.Patient{
+						ResourceType: "Patient",
+						Identifier: []domain.Identifier{
+							{},
+							{
+								Use: "usual",
+							},
+							{
+								Use: "official",
 							},
 						},
 					},
@@ -101,8 +158,8 @@ func TestTraverserBehaviour(t *testing.T) {
 			},
 		}
 		ast := []domain.ASTNode{
-			domain.NewASTNode("Patient", "20-12-1988", birthDayField),
-			domain.NewASTNode("Patient", "M", maritalStatusField)}
+			domain.NewASTNode("Patient", "20-12-1988", birthDayField, "0"),
+			domain.NewASTNode("Patient", "M", maritalStatusField, "1")}
 
 		got := traveser.Travers(ast)
 
@@ -113,6 +170,11 @@ func TestTraverserBehaviour(t *testing.T) {
 					Resource: domain.Patient{
 						ResourceType: "Patient",
 						BirthDate:    "20-12-1988",
+					},
+				},
+				{
+					Resource: domain.Patient{
+						ResourceType: "Patient",
 						MaritalStatus: &domain.CodeableConcept{
 							Coding: []domain.Coding{
 								{
@@ -163,8 +225,8 @@ func TestTraverserBehaviour(t *testing.T) {
 			},
 		}
 		ast := []domain.ASTNode{
-			domain.NewASTNode("Patient", "Jane", name),
-			domain.NewASTNode("Patient", "Mary", middleName)}
+			domain.NewASTNode("Patient", "Jane", name, "0"),
+			domain.NewASTNode("Patient", "Mary", middleName, "0")}
 
 		got := traveser.Travers(ast)
 
@@ -224,8 +286,8 @@ func TestTraverserBehaviour(t *testing.T) {
 		}
 
 		ast := []domain.ASTNode{
-			domain.NewASTNode("Patient", "Jane", name),
-			domain.NewASTNode("Medication", "A09", med)}
+			domain.NewASTNode("Patient", "Jane", name, "0"),
+			domain.NewASTNode("Medication", "A09", med, "0")}
 
 		got := traveser.Travers(ast)
 

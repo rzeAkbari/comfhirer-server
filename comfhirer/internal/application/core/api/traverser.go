@@ -23,7 +23,7 @@ func (t Traverser) Travers(ast []domain.ASTNode) domain.Bundle {
 	}
 
 	for _, node := range ast {
-		fhirResource := fhirResourceInstance(node.NodeName, instances)
+		fhirResource := fhirResourceInstance(node.NodeName, node.NodeIndex, instances)
 		setField(fhirResource, &node.FhirField, node.NodeValue)
 	}
 
@@ -34,16 +34,17 @@ func (t Traverser) Travers(ast []domain.ASTNode) domain.Bundle {
 	return r
 }
 
-func fhirResourceInstance(fhirResourceName string, instances map[string]reflect.Value) reflect.Value {
-	if instances[fhirResourceName].IsValid() {
-		return instances[fhirResourceName]
+func fhirResourceInstance(fhirResourceName string, index string, instances map[string]reflect.Value) reflect.Value {
+	instanceKey := fhirResourceName + "_" + index
+	if instances[instanceKey].IsValid() {
+		return instances[instanceKey]
 	}
 
 	fhirResourceType := typeRegistry[fhirResourceName]
 	instance := reflect.New(fhirResourceType).Elem()
 	setFieldValue(instance, "resourceType", fhirResourceName)
 
-	instances[fhirResourceName] = instance
+	instances[instanceKey] = instance
 
 	return instance
 }
@@ -65,6 +66,9 @@ func setField(fhirResource reflect.Value, field *domain.FhirField, value any) re
 
 		if fieldPointer(fhirResource) {
 			fhirField = reflect.Indirect(fhirResource).FieldByName(fieldName)
+			if nilFieldPointer(fhirField) {
+				fhirField = reflect.New(fhirField.Type().Elem())
+			}
 		}
 		if emptySlice(fhirResource, fieldName) {
 			fhirField = reflect.New(fhirResource.FieldByName(fieldName).Type()).Elem() //catch exception when field not exists
@@ -83,13 +87,21 @@ func setField(fhirResource reflect.Value, field *domain.FhirField, value any) re
 		var fhirField reflect.Value
 		fhirFieldIndex, _ := strconv.Atoi(field.Name)
 
-		if hasFhirField(fhirResource, fhirFieldIndex) {
+		if containsFhirField(fhirResource, fhirFieldIndex) {
 			fhirField = reflect.ValueOf(fhirResource.Interface()).Index(fhirFieldIndex)
 			setField(fhirField, nestedField, value)
-		} else {
+		}
+		if addNewFhirField(fhirResource, fhirFieldIndex) {
 			fhirField = reflect.New(reflect.TypeOf(fhirResource.Interface()).Elem()).Elem()
 			setField(fhirField, nestedField, value)
 			fhirResource.Set(reflect.Append(fhirResource, fhirField))
+		}
+		if hasToPopulate(fhirResource, fhirFieldIndex) {
+			for i := 0; i < fhirFieldIndex; i++ {
+				placeHolder := reflect.New(reflect.TypeOf(fhirResource.Interface()).Elem()).Elem()
+				fhirResource.Set(reflect.Append(fhirResource, placeHolder))
+			}
+			setField(fhirResource, field, value)
 		}
 	}
 
@@ -113,12 +125,24 @@ func setFieldValue(fhirResource reflect.Value, fieldName string, value any) refl
 
 func camelToPascalCase(fieldName string) string {
 	runes := []rune(fieldName)
-	runes[0] = unicode.ToUpper(runes[0])
+	if runes[0] != '_' {
+		runes[0] = unicode.ToUpper(runes[0])
+	} else {
+		runes[1] = unicode.ToUpper(runes[1])
+	}
 	return string(runes)
 }
 
-func hasFhirField(fhirResourceSlice reflect.Value, fhirFieldIndex int) bool {
-	return fhirResourceSlice.Len()-1 == fhirFieldIndex
+func containsFhirField(fhirResourceSlice reflect.Value, fhirFieldIndex int) bool {
+	return fhirResourceSlice.Len() > fhirFieldIndex
+}
+
+func addNewFhirField(fhirResourceSlice reflect.Value, fhirFieldIndex int) bool {
+	return fhirResourceSlice.Len() == fhirFieldIndex
+}
+
+func hasToPopulate(fhirResourceSlice reflect.Value, fhirFieldIndex int) bool {
+	return fhirResourceSlice.Len() < fhirFieldIndex
 }
 
 func nilFieldPointer(fhirResource reflect.Value) bool {

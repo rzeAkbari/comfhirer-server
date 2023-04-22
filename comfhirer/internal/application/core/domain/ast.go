@@ -8,6 +8,7 @@ const (
 
 type ASTNode struct {
 	NodeType  NodeType
+	NodeIndex string
 	NodeName  string
 	NodeValue any
 	FhirField
@@ -27,9 +28,10 @@ type FhirField struct {
 	*FhirField
 }
 
-func NewASTNode(name string, value any, field FhirField) ASTNode {
+func NewASTNode(name string, value any, field FhirField, index string) ASTNode {
 	return ASTNode{
 		NodeType:  FhirResource,
+		NodeIndex: index,
 		NodeValue: value,
 		NodeName:  name,
 		FhirField: field,

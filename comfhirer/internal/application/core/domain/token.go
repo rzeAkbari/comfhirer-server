@@ -2,6 +2,7 @@ package domain
 
 type Lexemes struct {
 	ResourceToken string
+	Index         string
 	FieldToken    []FieldToken
 	ValueToken    any
 }

@@ -10,12 +10,12 @@ type Parser struct {
 func (p Parser) Parse(lexemes domain.Lexemes) domain.ASTNode {
 
 	if (len(lexemes.FieldToken)) == 0 {
-		return domain.NewASTNode(lexemes.ResourceToken, lexemes.ValueToken, domain.FhirField{})
+		return domain.NewASTNode(lexemes.ResourceToken, lexemes.ValueToken, domain.FhirField{}, lexemes.Index)
 	}
 
 	field := *fhirFields(lexemes.FieldToken)
 
-	return domain.NewASTNode(lexemes.ResourceToken, lexemes.ValueToken, field)
+	return domain.NewASTNode(lexemes.ResourceToken, lexemes.ValueToken, field, lexemes.Index)
 }
 
 func fhirFields(tokens []domain.FieldToken) *domain.FhirField {
