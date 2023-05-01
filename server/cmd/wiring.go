@@ -17,7 +17,7 @@ func (w wiring) Compile(m map[string]any) []byte {
 }
 
 func (w wiring) Scrape(file []byte) map[string]any {
-	s := api.Scrape(file)
+	s, _ := api.Scrape(file)
 	fhirFlat := map[string]any{}
 
 	json.Unmarshal([]byte(s), &fhirFlat)

@@ -3,10 +3,15 @@ import pickle
 import PyPDF2
 import re
 import json
-
-path = "/Users/raziehakbari/raz-project/DNF/comfhirer-server/server/internal/application/core/api/lib/data"
+import os
 
 try:
+    directory = os.environ["DIRECTORY"]
+
+    if directory is None or directory == '':
+        raise ValueError('DIRECTORY env variable is not passed!')
+
+    path = directory + "/data"
     with open(path+'/principio_attivo_pattern.pkl', 'rb') as f:
         principio_attivo_pattern = pickle.load(f)
     with open(path+'/Farmaco_pattern.pkl', 'rb') as f:
