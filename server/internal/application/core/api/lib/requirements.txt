@@ -1,14 +1,1 @@
-pandas
-numpy
-matplotlib
-#plotly
-scipy
 PyPDF2
-pytesseract
-tesseract
-#easyocr
-poppler-utils
-pdf2image
-#libtesseract-dev
-#tesseract-ocr
-opencv-python

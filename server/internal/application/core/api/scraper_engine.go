@@ -14,7 +14,7 @@ func Scrape(file []byte) (string, error) {
 	if directory == "" {
 		return "", errors.New("DIRECTORY env variable is not passed")
 	}
-	internalPath := "/server/internal/application/core/api/lib"
+	internalPath := "/internal/application/core/api/lib"
 	modulePath := directory + internalPath
 
 	python3.Py_Initialize()
