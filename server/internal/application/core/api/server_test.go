@@ -27,13 +27,13 @@ var fhirMock = map[string]any{
 type spy struct {
 }
 
-func (s spy) Compile(_ map[string]any) []byte {
+func (s spy) Compile(_ map[string]any) ([]byte, []error) {
 	ba, _ := json.Marshal(fhirMock)
-	return ba
+	return ba, nil
 }
 
-func (s spy) Scrape(_ []byte) map[string]any {
-	return fhirMock
+func (s spy) Scrape(_ []byte) (map[string]any, error) {
+	return fhirMock, nil
 }
 
 func TestServerBehaviour(t *testing.T) {

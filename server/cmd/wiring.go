@@ -11,19 +11,25 @@ import (
 
 type wiring struct{}
 
-func (w wiring) Compile(m map[string]any) []byte {
-	fhir := comfhirer.Run(m)
+func (w wiring) Compile(m map[string]any) ([]byte, []error) {
+	fhir, errs := comfhirer.Run(m)
 
-	return fhir
+	return fhir, errs
 }
 
-func (w wiring) Scrape(file []byte) map[string]any {
-	s, _ := api.Scrape(file)
+func (w wiring) Scrape(file []byte) (map[string]any, error) {
+	s, err := api.Scrape(file)
+	if err != nil {
+		return nil, err
+	}
 	fhirFlat := map[string]any{}
 
-	json.Unmarshal([]byte(s), &fhirFlat)
+	err = json.Unmarshal([]byte(s), &fhirFlat)
+	if err != nil {
+		return nil, err
+	}
 
-	return fhirFlat
+	return fhirFlat, nil
 }
 
 func Run() {
