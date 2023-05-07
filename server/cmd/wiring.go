@@ -6,6 +6,7 @@ import (
 	"github.com/rzeAkbari/comfhirer-server/internal/application/core/api"
 	"log"
 	"net/http"
+	"os"
 )
 
 type wiring struct{}
@@ -29,5 +30,10 @@ func Run() {
 	w := wiring{}
 	s := api.NewServer(w, w)
 
-	log.Fatal(http.ListenAndServe(":5500", s))
+	var port string
+	if port = os.Getenv("PORT"); port == "" {
+		port = "5500"
+	}
+
+	log.Fatal(http.ListenAndServe(":"+port, s))
 }

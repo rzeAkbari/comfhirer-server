@@ -7,6 +7,7 @@ RUN apt install -y python3-dev
 
 ENV PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
 ENV DIRECTORY="/app"
+ENV PORT=8080
 
 COPY go.mod go.sum ./
 RUN go mod download -x
