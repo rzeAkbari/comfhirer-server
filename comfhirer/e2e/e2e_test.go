@@ -96,7 +96,10 @@ func TestEndToEnd(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := comfhirer.Run(tc.input)
+			got, err := comfhirer.Run(tc.input)
+			if len(err) > 0 {
+				t.Fatal("got error")
+			}
 			var gotFhir Bundle
 			var wantFhir Bundle
 

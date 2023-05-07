@@ -17,7 +17,7 @@ func TestTraverserBehaviour(t *testing.T) {
 		}
 		ast := []domain.ASTNode{domain.NewASTNode("Patient", "20-12-1988", field, "0")}
 
-		got := traveser.Travers(ast)
+		got, _ := traveser.Travers(ast)
 
 		want := domain.Bundle{
 			ResourceType: "Bundle",
@@ -54,7 +54,7 @@ func TestTraverserBehaviour(t *testing.T) {
 		}
 		ast := []domain.ASTNode{domain.NewASTNode("Patient", "M", field, "0")}
 
-		got := traveser.Travers(ast)
+		got, _ := traveser.Travers(ast)
 
 		want := domain.Bundle{
 			ResourceType: "Bundle",
@@ -109,7 +109,7 @@ func TestTraverserBehaviour(t *testing.T) {
 			domain.NewASTNode("Patient", "usual", identifierTwo, "0"),
 			domain.NewASTNode("Patient", "official", identifierThree, "0")}
 
-		got := traveser.Travers(ast)
+		got, _ := traveser.Travers(ast)
 
 		want := domain.Bundle{
 			ResourceType: "Bundle",
@@ -161,7 +161,7 @@ func TestTraverserBehaviour(t *testing.T) {
 			domain.NewASTNode("Patient", "20-12-1988", birthDayField, "0"),
 			domain.NewASTNode("Patient", "M", maritalStatusField, "1")}
 
-		got := traveser.Travers(ast)
+		got, _ := traveser.Travers(ast)
 
 		want := domain.Bundle{
 			ResourceType: "Bundle",
@@ -228,7 +228,7 @@ func TestTraverserBehaviour(t *testing.T) {
 			domain.NewASTNode("Patient", "Jane", name, "0"),
 			domain.NewASTNode("Patient", "Mary", middleName, "0")}
 
-		got := traveser.Travers(ast)
+		got, _ := traveser.Travers(ast)
 
 		want := domain.Bundle{
 			ResourceType: "Bundle",
@@ -289,7 +289,7 @@ func TestTraverserBehaviour(t *testing.T) {
 			domain.NewASTNode("Patient", "Jane", name, "0"),
 			domain.NewASTNode("Medication", "A09", med, "0")}
 
-		got := traveser.Travers(ast)
+		got, _ := traveser.Travers(ast)
 
 		want := domain.Bundle{
 			ResourceType: "Bundle",
@@ -321,4 +321,171 @@ func TestTraverserBehaviour(t *testing.T) {
 
 		assert.Equal(t, want.Entry, got.Entry)
 	})
+}
+
+func TestErrorHandling(t *testing.T) {
+	traveser := api.Traverser{}
+
+	t.Run("error with unknown resource", func(t *testing.T) {
+		field := domain.FhirField{
+			Name:            "unknown",
+			FieldParsedType: domain.SingleField,
+		}
+		ast := []domain.ASTNode{domain.NewASTNode("Unknown", "", field, "0")}
+
+		_, err := traveser.Travers(ast)
+
+		want := "unknown resource \"Unknown\""
+
+		assert.Equal(t, want, err[0].Error())
+	})
+
+	t.Run("error with unknown single field", func(t *testing.T) {
+		field := domain.FhirField{
+			Name:            "unknown",
+			FieldParsedType: domain.SingleField,
+		}
+		ast := []domain.ASTNode{domain.NewASTNode("Patient", "", field, "0")}
+
+		_, err := traveser.Travers(ast)
+
+		want := "unknown field \"Unknown\""
+
+		assert.Equal(t, want, err[0].Error())
+	})
+
+	t.Run("error with unknown comfhirer position field ", func(t *testing.T) {
+		field := domain.FhirField{
+			Name:            "maritalStatus",
+			FieldParsedType: domain.SingleField,
+			FhirField: &domain.FhirField{
+				Name:            "unknown",
+				FieldParsedType: domain.SingleField,
+				FhirField: &domain.FhirField{
+					Name:            "0",
+					FieldParsedType: domain.MultipleNestedField,
+					FhirField: &domain.FhirField{
+						Name:            "code",
+						FieldParsedType: domain.SingleField,
+					},
+				},
+			},
+		}
+		ast := []domain.ASTNode{domain.NewASTNode("Patient", "M", field, "0")}
+
+		_, err := traveser.Travers(ast)
+
+		want := "unknown field \"Unknown\""
+
+		assert.Equal(t, want, err[0].Error())
+	})
+
+	t.Run("error with negative comfhirer position", func(t *testing.T) {
+		field := domain.FhirField{
+			Name:            "maritalStatus",
+			FieldParsedType: domain.SingleField,
+			FhirField: &domain.FhirField{
+				Name:            "coding",
+				FieldParsedType: domain.SingleField,
+				FhirField: &domain.FhirField{
+					Name:            "-1",
+					FieldParsedType: domain.MultipleNestedField,
+					FhirField: &domain.FhirField{
+						Name:            "code",
+						FieldParsedType: domain.SingleField,
+					},
+				},
+			},
+		}
+		ast := []domain.ASTNode{domain.NewASTNode("Patient", "M", field, "0")}
+
+		_, err := traveser.Travers(ast)
+
+		want := "negative position detected"
+
+		assert.Equal(t, want, err[0].Error())
+	})
+
+	t.Run("error with unknwon comfhirer position end field", func(t *testing.T) {
+		field := domain.FhirField{
+			Name:            "maritalStatus",
+			FieldParsedType: domain.SingleField,
+			FhirField: &domain.FhirField{
+				Name:            "coding",
+				FieldParsedType: domain.SingleField,
+				FhirField: &domain.FhirField{
+					Name:            "0",
+					FieldParsedType: domain.MultipleNestedField,
+					FhirField: &domain.FhirField{
+						Name:            "unknown",
+						FieldParsedType: domain.SingleField,
+					},
+				},
+			},
+		}
+		ast := []domain.ASTNode{domain.NewASTNode("Patient", "M", field, "0")}
+
+		_, err := traveser.Travers(ast)
+
+		want := "unknown field \"Unknown\""
+
+		assert.Equal(t, want, err[0].Error())
+	})
+
+	t.Run("error with negative comfhirer value position", func(t *testing.T) {
+		name := domain.FhirField{
+			Name:            "name",
+			FieldParsedType: domain.SingleField,
+			FhirField: &domain.FhirField{
+				Name:            "0",
+				FieldParsedType: domain.MultipleNestedField,
+				FhirField: &domain.FhirField{
+					Name:            "given",
+					FieldParsedType: domain.SingleField,
+					FhirField: &domain.FhirField{
+						Name:            "-1",
+						FieldParsedType: domain.MultipleValueField,
+					},
+				},
+			},
+		}
+
+		ast := []domain.ASTNode{domain.NewASTNode("Patient", "Jane", name, "0")}
+
+		_, err := traveser.Travers(ast)
+
+		want := "negative index detected"
+
+		assert.Equal(t, want, err[0].Error())
+
+	})
+
+	t.Run("error with negative comfhirer value position", func(t *testing.T) {
+
+		middleName := domain.FhirField{
+			Name:            "name",
+			FieldParsedType: domain.SingleField,
+			FhirField: &domain.FhirField{
+				Name:            "0",
+				FieldParsedType: domain.MultipleNestedField,
+				FhirField: &domain.FhirField{
+					Name:            "unknown",
+					FieldParsedType: domain.SingleField,
+					FhirField: &domain.FhirField{
+						Name:            "0",
+						FieldParsedType: domain.MultipleValueField,
+					},
+				},
+			},
+		}
+		ast := []domain.ASTNode{domain.NewASTNode("Patient", "Mary", middleName, "0")}
+
+		_, err := traveser.Travers(ast)
+
+		want := "unknown field \"Unknown\""
+
+		assert.Equal(t, want, err[0].Error())
+
+	})
+
 }

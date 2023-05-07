@@ -12,7 +12,7 @@ type Comfhir struct {
 	traverser api.Traverser
 }
 
-func (c Comfhir) Comfhire(m map[string]any) []byte {
+func (c Comfhir) Comfhire(m map[string]any) ([]byte, []error) {
 	var ast []domain.ASTNode
 
 	for key, value := range m {
@@ -21,11 +21,14 @@ func (c Comfhir) Comfhire(m map[string]any) []byte {
 		ast = append(ast, astNode)
 	}
 
-	bundle := c.traverser.Travers(ast)
+	bundle, err := c.traverser.Travers(ast)
+	if len(err) > 0 {
+		return nil, err
+	}
 
 	r, _ := json.Marshal(bundle)
 
-	return r
+	return r, nil
 }
 
 func NewComfhirer() Comfhir {
