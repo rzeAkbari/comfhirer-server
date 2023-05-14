@@ -133,7 +133,10 @@ func setField(fhirResource reflect.Value, field *domain.FhirField, value any) (r
 		}
 		if containsFhirField(fhirResource, fhirFieldIndex) {
 			fhirField = reflect.ValueOf(fhirResource.Interface()).Index(fhirFieldIndex)
-			setField(fhirField, nestedField, value)
+			_, err := setField(fhirField, nestedField, value)
+			if err != nil {
+				return reflect.Value{}, err
+			}
 		}
 		if addNewFhirField(fhirResource, fhirFieldIndex) {
 			fhirField = reflect.New(reflect.TypeOf(fhirResource.Interface()).Elem()).Elem()
@@ -148,7 +151,10 @@ func setField(fhirResource reflect.Value, field *domain.FhirField, value any) (r
 				placeHolder := reflect.New(reflect.TypeOf(fhirResource.Interface()).Elem()).Elem()
 				fhirResource.Set(reflect.Append(fhirResource, placeHolder))
 			}
-			setField(fhirResource, field, value)
+			_, err := setField(fhirResource, field, value)
+			if err != nil {
+				return reflect.Value{}, err
+			}
 		}
 	}
 
@@ -183,14 +189,24 @@ func camelToPascalCase(fieldName string) string {
 }
 
 func containsFhirField(fhirResourceSlice reflect.Value, fhirFieldIndex int) bool {
+	if fhirResourceSlice.Kind() != reflect.Slice {
+		return false
+	}
+
 	return fhirResourceSlice.Len() > fhirFieldIndex
 }
 
 func addNewFhirField(fhirResourceSlice reflect.Value, fhirFieldIndex int) bool {
+	if fhirResourceSlice.Kind() != reflect.Slice {
+		return false
+	}
 	return fhirResourceSlice.Len() == fhirFieldIndex
 }
 
 func hasToPopulate(fhirResourceSlice reflect.Value, fhirFieldIndex int) bool {
+	if fhirResourceSlice.Kind() != reflect.Slice {
+		return false
+	}
 	return fhirResourceSlice.Len() < fhirFieldIndex
 }
 

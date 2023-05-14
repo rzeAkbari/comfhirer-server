@@ -903,7 +903,7 @@ type Medication struct {
 	/**
 	 * When Medication is referenced from MedicationRequest, this is the ordered form.  When Medication is referenced within MedicationDispense, this is the dispensed form.  When Medication is referenced within MedicationAdministration, this is administered form.
 	 */
-	DoseForm *CodeableConcept `json:"doseForm,omitempty"`
+	Form *CodeableConcept `json:"form,omitempty"`
 	/**
 	 * The serial number could be included as an identifier.
 	 */
@@ -919,8 +919,8 @@ type Medication struct {
 	/**
 	 * This status is intended to identify if the medication in a local system is in active use within a drug database or inventory.  For example, a pharmacy system may create a new drug file record for a compounded product "ABC Hospital Special Cream" with an active status.  At some point in the future, it may be determined that the drug record was created with an error and the status is changed to "entered in error".   This status is not intended to specify if a medication is part of a particular formulary.  It is possible that the drug record may be referenced by multiple formularies or catalogues and each of those entries would have a separate status.
 	 */
-	Status     MedicationStatus `json:"status,omitempty"`
-	Ext_status *Element         `json:"_status,omitempty"`
+	Status     string   `json:"status,omitempty"`
+	Ext_status *Element `json:"_status,omitempty"`
 }
 
 type Ratio struct {
