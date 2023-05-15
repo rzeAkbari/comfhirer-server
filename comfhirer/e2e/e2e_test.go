@@ -1,7 +1,6 @@
 package e2e
 
 import (
-	"encoding/json"
 	"github.com/rzeAkbari/comfhirer-server/comfhirer"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -136,6 +135,21 @@ func TestEndToEnd(t *testing.T) {
 			},
 			fhir: []byte("{\"resourceType\":\"Bundle\",\"entry\":[{\"resource\":{\"resourceType\":\"Medication\",\"amount\":{\"denominator\":{\"code\":\"mg\",\"system\":\"http://unitsofmeasure.org\",\"value\":2},\"numerator\":{\"code\":\"mg\",\"system\":\"http://unitsofmeasure.org\",\"value\":1}},\"batch\":{\"expirationDate\":\"2017-05-22\",\"lotNumber\":\"9494788\"},\"code\":{\"coding\":[{\"code\":\"260385009\",\"system\":\"http://snomed.info/sct\"},{\"display\":\"Negative\",\"system\":\"http://system.info/sct\"}]},\"form\":{\"coding\":[{\"code\":\"430127000\",\"display\":\"Oral Form Oxycodone (product)\",\"system\":\"http://snomed.info/sct\"}]},\"identifier\":[{\"system\":\"urn:oid:1.2.36.146.595.217.0.1\",\"type\":{\"coding\":[{\"code\":\"MR\",\"system\":\"http://terminology.hl7.org/CodeSystem/v2-0203\"}]},\"use\":\"usual\"}],\"ingredient\":[{\"isActive\":true,\"item\":{},\"itemReference\":{\"reference\":\"ingredient/sub03\"},\"strength\":{\"denominator\":{\"code\":\"TAB\",\"system\":\"http://terminology.hl7.org/CodeSystem/v3-orderableDrugForm\",\"value\":1},\"numerator\":{\"code\":\"mg\",\"system\":\"http://unitsofmeasure.org\",\"value\":5}}}],\"manufacturer\":{\"display\":\"manufacturer\",\"identifier\":{\"assigner\":{\"reference\":\"assigner/1\"},\"period\":{\"start\":\"2023-12-01\"},\"system\":\"http://snomed.info/manufacturer\",\"type\":{\"coding\":[{\"code\":\"manufacturer-code\"}]},\"use\":\"manufacturer-code\",\"value\":\"manufacturer-code\"},\"reference\":\"organization/1\",\"type\":\"patient\"},\"status\":\"active\"}}]}"),
 		},
+		{
+			name: "Practitioner",
+			input: map[string]any{
+				"Practitioner.identifier.[0].system":                   "http://www.acme.org/practitioners",
+				"Practitioner.identifier.[0].value":                    "23",
+				"Practitioner.active":                                  true,
+				"Practitioner.name.[0].family":                         "Careful",
+				"Practitioner.name.[0].given.{0}":                      "Adam",
+				"Practitioner.name.[0].prefix.{0}":                     "Dr",
+				"Practitioner.qualification.[0].identifier.[0].system": "http://example.org/UniversityIdentifier",
+				"Practitioner.qualification.[0].identifier.[0].value":  "12345",
+				"Practitioner.qualification.[0].issuer.display":        "issuer",
+			},
+			fhir: []byte("{\"resourceType\":\"Bundle\",\"entry\":[{\"resource\":{\"resourceType\":\"Practitioner\",\"active\":true,\"identifier\":[{\"system\":\"http://www.acme.org/practitioners\",\"value\":\"23\"}],\"name\":[{\"family\":\"Careful\",\"given\":[\"Adam\"],\"prefix\":[\"Dr\"]}],\"qualification\":[{\"code\":null,\"identifier\":[{\"system\":\"http://example.org/UniversityIdentifier\",\"value\":\"12345\"}],\"issuer\":{\"display\":\"issuer\"}}]}}]}"),
+		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -143,11 +157,6 @@ func TestEndToEnd(t *testing.T) {
 			if len(err) > 0 {
 				t.Fatal("got error")
 			}
-			var gotFhir Bundle
-			var wantFhir Bundle
-
-			json.Unmarshal(got, &gotFhir)
-			json.Unmarshal(tc.fhir, &wantFhir)
 
 			assert.JSONEq(t, string(tc.fhir), string(got))
 		})

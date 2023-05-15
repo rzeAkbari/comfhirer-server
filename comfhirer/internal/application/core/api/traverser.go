@@ -10,8 +10,9 @@ import (
 )
 
 var typeRegistry = map[string]reflect.Type{
-	"Patient":    reflect.TypeOf(domain.Patient{}),
-	"Medication": reflect.TypeOf(domain.Medication{}),
+	"Patient":      reflect.TypeOf(domain.Patient{}),
+	"Medication":   reflect.TypeOf(domain.Medication{}),
+	"Practitioner": reflect.TypeOf(domain.Practitioner{}),
 }
 
 type Traverser struct {
@@ -19,7 +20,7 @@ type Traverser struct {
 
 func (t Traverser) Travers(ast []domain.ASTNode) (domain.Bundle, []error) {
 	var instances = map[string]reflect.Value{}
-	traversErr := []error{}
+	var traversErr []error
 	r := domain.Bundle{
 		ResourceType: "Bundle",
 	}
