@@ -1079,3 +1079,343 @@ type PractitionerQualification struct {
 	 */
 	Period *Period `json:"period,omitempty"`
 }
+
+type CareTeam struct {
+	/** Resource Type Name (for serialization) */
+	ResourceType string `json:"resourceType"`
+	/**
+	 * There may be multiple axis of categorization and one team may serve multiple purposes.
+	 */
+	Category []CodeableConcept `json:"category,omitempty"`
+	/**
+	 * This will typically be the encounter the event occurred within, but some activities may be initiated prior to or after the official completion of an encounter but still be tied to the context of the encounter.
+	 */
+	Encounter *Reference `json:"encounter,omitempty"`
+	/**
+	 * This is a business identifier, not a resource identifier (see [discussion](resource.html#identifiers)).  It is best practice for the identifier to only appear on a single resource instance, however business practices may occasionally dictate that multiple resource instances with the same identifier can exist - possibly even with different resource types.  For example, multiple Patient and a Person resource instance might share the same social insurance number.
+	 */
+	Identifier []Identifier `json:"identifier,omitempty"`
+	/**
+	 * The organization responsible for the care team.
+	 */
+	ManagingOrganization []Reference `json:"managingOrganization,omitempty"`
+	/**
+	 * The meaning/purpose of the team is conveyed in CareTeam.category.  This element may also convey semantics of the team (e.g. "Red trauma team"), but its primary purpose is to distinguish between identical teams in a human-friendly way.  ("Team 18735" isn't as friendly.).
+	 */
+	Name     string   `json:"name,omitempty"`
+	Ext_name *Element `json:"_name,omitempty"`
+	/**
+	 * Comments made about the CareTeam.
+	 */
+	Note []Annotation `json:"note,omitempty"`
+	/**
+	 * Identifies all people and organizations who are expected to be involved in the care team.
+	 */
+	Participant []CareTeamParticipant `json:"participant,omitempty"`
+	/**
+	 * Indicates when the team did (or is intended to) come into effect and end.
+	 */
+	Period *Period `json:"period,omitempty"`
+	/**
+	 * Describes why the care team exists.
+	 */
+	ReasonCode []CodeableConcept `json:"reasonCode,omitempty"`
+	/**
+	 * Condition(s) that this care team addresses.
+	 */
+	ReasonReference []Reference `json:"reasonReference,omitempty"`
+	/**
+	 * This element is labeled as a modifier because the status contains the code entered-in-error that marks the care team as not currently valid.
+	 */
+	Status     string   `json:"status,omitempty"`
+	Ext_status *Element `json:"_status,omitempty"`
+	/**
+	 * Identifies the patient or group whose intended care is handled by the team.
+	 */
+	Subject *Reference `json:"subject,omitempty"`
+	/**
+	 * The ContactPoint.use code of home is not appropriate to use. These contacts are not the contact details of individual care team members.
+	 */
+	telecom []ContactPoint `json:"telecom,omitempty"`
+}
+
+type CareTeamParticipant struct {
+	/**
+	 * Patient only needs to be listed if they have a role other than "subject of care".
+	 * Member is optional because some participants may be known only by their role, particularly in draft plans.
+	 */
+	Member *Reference `json:"member,omitempty"`
+	/**
+	 * The organization of the practitioner.
+	 */
+	OnBehalfOf *Reference `json:"onBehalfOf,omitempty"`
+	/**
+	 * Indicates when the specific member or organization did (or is intended to) come into effect and end.
+	 */
+	Period *Period `json:"period,omitempty"`
+	/**
+	 * Roles may sometimes be inferred by type of Practitioner.  These are relationships that hold only within the context of the care team.  General relationships should be handled as properties of the Patient resource directly.
+	 */
+	Role []CodeableConcept `json:"role,omitempty"`
+}
+
+type Annotation struct {
+	/**
+	 * Organization is used when there's no need for specific attribution as to who made the comment.
+	 */
+	AuthorReference *Reference `json:"authorReference,omitempty"`
+	/**
+	 * Organization is used when there's no need for specific attribution as to who made the comment.
+	 */
+	AuthorString     string   `json:"authorString,omitempty"`
+	Ext_authorString *Element `json:"_authorString,omitempty"`
+	/**
+	 * The text of the annotation in markdown format.
+	 */
+	Text     string   `json:"text"`
+	Ext_text *Element `json:"_text,omitempty"`
+	/**
+	 * Indicates when this particular annotation was made.
+	 */
+	Time     string   `json:"time,omitempty"`
+	Ext_time *Element `json:"_time,omitempty"`
+}
+
+type DeviceUdiCarrier struct {
+	/**
+	 * The AIDC form of UDIs should be scanned or otherwise used for the identification of the device whenever possible to minimize errors in records resulting from manual transcriptions. If separate barcodes for DI and PI are present, concatenate the string with DI first and in order of human readable expression on label.
+	 */
+	CarrierAIDC     string   `json:"carrierAIDC,omitempty"`
+	Ext_carrierAIDC *Element `json:"_carrierAIDC,omitempty"`
+	/**
+	 * If separate barcodes for DI and PI are present, concatenate the string with DI first and in order of human readable expression on label.
+	 */
+	CarrierHRF     string   `json:"carrierHRF,omitempty"`
+	Ext_carrierHRF *Element `json:"_carrierHRF,omitempty"`
+	/**
+	 * The device identifier (DI) is a mandatory, fixed portion of a UDI that identifies the labeler and the specific version or model of a device.
+	 */
+	DeviceIdentifier     string   `json:"deviceIdentifier,omitempty"`
+	Ext_deviceIdentifier *Element `json:"_deviceIdentifier,omitempty"`
+	/**
+	 * A coded entry to indicate how the data was entered.
+	 */
+	EntryType     string   `json:"entryType,omitempty"`
+	Ext_entryType *Element `json:"_entryType,omitempty"`
+	/**
+	 * Organization that is charged with issuing UDIs for devices.  For example, the US FDA issuers include :
+	 * 1) GS1:
+	 * http://hl7.org/fhir/NamingSystem/gs1-di,
+	 * 2) HIBCC:
+	 * http://hl7.org/fhir/NamingSystem/hibcc-dI,
+	 * 3) ICCBBA for blood containers:
+	 * http://hl7.org/fhir/NamingSystem/iccbba-blood-di,
+	 * 4) ICCBA for other devices:
+	 * http://hl7.org/fhir/NamingSystem/iccbba-other-di.
+	 */
+	Issuer     string   `json:"issuer,omitempty"`
+	Ext_issuer *Element `json:"_issuer,omitempty"`
+	/**
+	 * The identity of the authoritative source for UDI generation within a  jurisdiction.  All UDIs are globally unique within a single namespace with the appropriate repository uri as the system.  For example,  UDIs of devices managed in the U.S. by the FDA, the value is  http://hl7.org/fhir/NamingSystem/fda-udi.
+	 */
+	Jurisdiction     string   `json:"jurisdiction,omitempty"`
+	Ext_jurisdiction *Element `json:"_jurisdiction,omitempty"`
+}
+
+//DeviceDeviceName
+/**
+ * This represents the manufacturer's name of the device as provided by the device, from a UDI label, or by a person describing the Device.  This typically would be used when a person provides the name(s) or when the device represents one of the names available from DeviceDefinition.
+ */
+type DeviceDeviceName struct {
+	/**
+	 * The name that identifies the device.
+	 */
+	Name     string   `json:"name"`
+	Ext_name *Element `json:"_name,omitempty"`
+	/**
+	 * The type of deviceName.
+	 * UDILabelName | UserFriendlyName | PatientReportedName | ManufactureDeviceName | ModelName.
+	 */
+	Type     string   `json:"type,omitempty"`
+	Ext_type *Element `json:"_type,omitempty"`
+}
+
+//DeviceSpecialization
+/**
+ * The capabilities supported on a  device, the standards to which the device conforms for a particular purpose, and used for the communication.
+ */
+type DeviceSpecialization struct {
+	/**
+	 * The standard that is used to operate and communicate.
+	 */
+	SystemType CodeableConcept `json:"systemType"`
+	/**
+	 * The version of the standard that is used to operate and communicate.
+	 */
+	Version     string   `json:"version,omitempty"`
+	Ext_version *Element `json:"_version,omitempty"`
+}
+
+// DeviceVersion
+/**
+ * The actual design of the device or software version running on the device.
+ */
+type DeviceVersion struct {
+	/**
+	 * A single component of the device version.
+	 */
+	Component *Identifier `json:"component,omitempty"`
+	/**
+	 * The type of the device version, e.g. manufacturer, approved, internal.
+	 */
+	Type *CodeableConcept `json:"type,omitempty"`
+	/**
+	 * The version text.
+	 */
+	Value     string   `json:"value"`
+	Ext_value *Element `json:"_value,omitempty"`
+}
+
+//DeviceProperty
+/**
+ * The actual configuration settings of a device as it actually operates, e.g., regulation status, time properties.
+ */
+type DeviceProperty struct {
+
+	/**
+	 * Code that specifies the property DeviceDefinitionPropetyCode (Extensible).
+	 */
+	Type *CodeableConcept `json:"type"`
+	/**
+	 * Property value as a code, e.g., NTP4 (synced to NTP).
+	 */
+	ValueCode []CodeableConcept `json:"valueCode,omitempty"`
+	/**
+	 * Property value as a quantity.
+	 */
+	ValueQuantity []Quantity `json:"valueQuantity,omitempty"`
+}
+
+//Device
+/**
+ * A type of a manufactured item that is used in the provision of healthcare without being substantially changed through that activity. The device may be a medical or non-medical device.
+ */
+type Device struct {
+
+	/** Resource Type Name (for serialization) */
+	ResourceType string `json:"resourceType"`
+	/**
+	 * used for troubleshooting etc.
+	 */
+	Contact []ContactPoint `json:"contact,omitempty"`
+	/**
+	 * The reference to the definition for the device.
+	 */
+	Definition *Reference `json:"definition,omitempty"`
+	/**
+	 * This represents the manufacturer's name of the device as provided by the device, from a UDI label, or by a person describing the Device.  This typically would be used when a person provides the name(s) or when the device represents one of the names available from DeviceDefinition.
+	 */
+	DeviceName []DeviceDeviceName `json:"deviceName,omitempty"`
+	/**
+	 * For example, this applies to devices in the United States regulated under *Code of Federal Regulation 21CFR§1271.290(c)*.
+	 */
+	DistinctIdentifier     string   `json:"distinctIdentifier,omitempty"`
+	Ext_distinctIdentifier *Element `json:"_distinctIdentifier,omitempty"`
+	/**
+	 * The date and time beyond which this device is no longer valid or should not be used (if applicable).
+	 */
+	ExpirationDate     string   `json:"expirationDate,omitempty"`
+	Ext_expirationDate *Element `json:"_expirationDate,omitempty"`
+	/**
+	 * The barcode string from a barcode present on a device label or package may identify the instance, include names given to the device in local usage, or may identify the type of device. If the identifier identifies the type of device, Device.type element should be used.
+	 */
+	Identifier []Identifier `json:"identifier,omitempty"`
+	/**
+	 * The place where the device can be found.
+	 */
+	Location *Reference `json:"location,omitempty"`
+	/**
+	 * Lot number assigned by the manufacturer.
+	 */
+	LotNumber     string   `json:"lotNumber,omitempty"`
+	Ext_lotNumber *Element `json:"_lotNumber,omitempty"`
+	/**
+	 * The date and time when the device was manufactured.
+	 */
+	ManufactureDate     string   `json:"manufactureDate,omitempty"`
+	Ext_manufactureDate *Element `json:"_manufactureDate,omitempty"`
+	/**
+	 * A name of the manufacturer.
+	 */
+	Manufacturer     string   `json:"manufacturer,omitempty"`
+	Ext_Manufacturer *Element `json:"_manufacturer,omitempty"`
+	/**
+	 * The manufacturer's model number for the device.
+	 */
+	ModelNumber     string   `json:"modelNumber,omitempty"`
+	Ext_modelNumber *Element `json:"_modelNumber,omitempty"`
+	/**
+	 * Descriptive information, usage information or implantation information that is not captured in an existing element.
+	 */
+	Note []Annotation `json:"note,omitempty"`
+	/**
+	 * An organization that is responsible for the provision and ongoing maintenance of the device.
+	 */
+	Owner *Reference `json:"owner,omitempty"`
+	/**
+	 * The device that this device is attached to or is part of.
+	 */
+	Parent *Reference `json:"parent,omitempty"`
+	/**
+	 * Alphanumeric Maximum 20.
+	 */
+	PartNumber     string   `json:"partNumber,omitempty"`
+	Ext_partNumber *Element `json:"_partNumber,omitempty"`
+	/**
+	 * Patient information, If the device is affixed to a person.
+	 */
+	Patient *Reference `json:"patient,omitempty"`
+	/**
+	 * The actual configuration settings of a device as it actually operates, e.g., regulation status, time properties.
+	 */
+	Property []DeviceProperty `json:"property,omitempty"`
+	/**
+	 * Provides additional safety characteristics about a medical device.  For example devices containing latex.
+	 */
+	Safety []CodeableConcept `json:"safety,omitempty"`
+	/**
+	 * Alphanumeric Maximum 20.
+	 */
+	SerialNumber     string   `json:"serialNumber,omitempty"`
+	Ext_serialNumber *Element `json:"_serialNumber,omitempty"`
+	/**
+	 * The capabilities supported on a  device, the standards to which the device conforms for a particular purpose, and used for the communication.
+	 */
+	Specialization []DeviceSpecialization `json:"specialization,omitempty"`
+	/**
+	 * This element is labeled as a modifier because the status contains the codes inactive and entered-in-error that mark the device (record)as not currently valid.
+	 */
+	Status     string   `json:"status,omitempty"`
+	Ext_status *Element `json:"_status,omitempty"`
+	/**
+	 * Reason for the dtatus of the Device availability.
+	 */
+	StatusReason []CodeableConcept `json:"statusReason,omitempty"`
+	/**
+	 * The kind or type of device.
+	 */
+	Type *CodeableConcept `json:"type,omitempty"`
+	/**
+	 * UDI may identify an unique instance of a device, or it may only identify the type of the device.  See [UDI mappings](device-mappings.html#udi) for a complete mapping of UDI parts to Device.
+	 */
+	UdiCarrier []DeviceUdiCarrier `json:"udiCarrier,omitempty"`
+	/**
+	 * If the device is running a FHIR server, the network address should  be the Base URL from which a conformance statement may be retrieved.
+	 */
+	Url     string   `json:"url,omitempty"`
+	Ext_url *Element `json:"_url,omitempty"`
+	/**
+	 * The actual design of the device or software version running on the device.
+	 */
+	Version []DeviceVersion `json:"version,omitempty"`
+}

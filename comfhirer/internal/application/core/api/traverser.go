@@ -13,6 +13,8 @@ var typeRegistry = map[string]reflect.Type{
 	"Patient":      reflect.TypeOf(domain.Patient{}),
 	"Medication":   reflect.TypeOf(domain.Medication{}),
 	"Practitioner": reflect.TypeOf(domain.Practitioner{}),
+	"CareTeam":     reflect.TypeOf(domain.CareTeam{}),
+	"Device":       reflect.TypeOf(domain.Device{}),
 }
 
 type Traverser struct {
